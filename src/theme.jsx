@@ -1,0 +1,63 @@
+// HRMS Theme Configuration for styled-components
+
+export const colors = {
+  primary: "#1866d7",
+  primaryHover: "#154b9c",
+  secondary: "#e3eefd",
+  background: "#f7fafd",
+  textPrimary: "#222e3a",
+  textSecondary: "#4a6886",
+  border: "#e8e8f1",
+  white: "#fff",
+  success: "#28a745",
+  warning: "#ffc107",
+  danger: "#dc3545",
+  info: "#17a2b8",
+  light: "#f8f9fa",
+  dark: "#343a40"
+};
+
+export const spacing = {
+  xs: "0.25rem",
+  sm: "0.5rem",
+  md: "1rem",
+  lg: "1.5rem",
+  xl: "2rem",
+  xxl: "3rem"
+};
+
+export const fontSize = {
+  xs: "0.75rem",
+  sm: "0.875rem",
+  md: "1rem",
+  lg: "1.125rem",
+  xl: "1.25rem",
+  xxl: "1.5rem",
+  xxxl: "2rem"
+};
+
+export const borderRadius = {
+  sm: "0.25rem",
+  md: "0.375rem",
+  lg: "0.5rem",
+  xl: "0.75rem",
+  xxl: "1rem"
+};
+
+export const shadows = {
+  sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+  md: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+  lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+  xl: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+};
+
+// Combined theme object (required for styled-components ThemeProvider)
+const theme = {
+  colors,
+  spacing,
+  fontSize,
+  borderRadius,
+  shadows
+};
+
+export default theme;

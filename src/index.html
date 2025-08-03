@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRMS - Human Resources Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Login Page -->
+        <div id="login-page" class="page active">
+            <div class="login-container">
+                <div class="login-card">
+                    <div class="login-header">
+                        <h1><i class="fas fa-users"></i> HRMS</h1>
+                        <p>Human Resources Management System</p>
+                    </div>
+                    <form id="login-form" class="login-form">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="role">Role</label>
+                            <select id="role" class="form-control" required>
+                                <option value="">Select Role</option>
+                                <option value="ADMIN">Admin</option>
+                                <option value="MANAGER">Manager</option>
+                                <option value="EMPLOYEE">Employee</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn--primary btn--full-width">Login</button>
+                    </form>
+                    <div class="login-demo">
+                        <p>Demo Credentials:</p>
+                        <small>
+                            Admin: admin@company.com / admin123<br>
+                            Manager: manager@company.com / manager123<br>
+                            Employee: employee@company.com / employee123
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Application Layout -->
+        <div id="main-app" class="main-app hidden">
+            <!-- Header/Navbar -->
+            <header class="navbar">
+                <div class="navbar-brand">
+                    <i class="fas fa-users"></i>
+                    <span>HRMS</span>
+                </div>
+                <div class="navbar-user">
+                    <span id="user-name">Welcome, User</span>
+                    <button id="logout-btn" class="btn btn--outline btn--sm">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            <div class="app-body">
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <nav class="sidebar-nav">
+                        <a href="#dashboard" class="nav-item active" data-page="dashboard">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="#employees" class="nav-item" data-page="employees">
+                            <i class="fas fa-users"></i>
+                            <span>Employees</span>
+                        </a>
+                        <a href="#recruitment" class="nav-item" data-page="recruitment">
+                            <i class="fas fa-briefcase"></i>
+                            <span>Recruitment</span>
+                        </a>
+                        <a href="#performance" class="nav-item" data-page="performance">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Performance</span>
+                        </a>
+                        <a href="#payroll" class="nav-item" data-page="payroll">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Payroll</span>
+                        </a>
+                        <div id="admin-nav" class="admin-only hidden">
+                            <a href="#admin" class="nav-item" data-page="admin">
+                                <i class="fas fa-cog"></i>
+                                <span>Administration</span>
+                            </a>
+                        </div>
+                    </nav>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="main-content">
+                    <!-- Dashboard Page -->
+                    <div id="dashboard-page" class="content-page active">
+                        <div class="page-header">
+                            <h2>Dashboard</h2>
+                            <p id="dashboard-subtitle">Overview of your HR metrics</p>
+                        </div>
+                        
+                        <!-- Dashboard Cards -->
+                        <div class="dashboard-grid">
+                            <div class="dashboard-card">
+                                <div class="card-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3 id="total-employees">125</h3>
+                                    <p>Total Employees</p>
+                                </div>
+                            </div>
+                            <div class="dashboard-card">
+                                <div class="card-icon">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3 id="open-positions">8</h3>
+                                    <p>Open Positions</p>
+                                </div>
+                            </div>
+                            <div class="dashboard-card">
+                                <div class="card-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3 id="pending-reviews">12</h3>
+                                    <p>Pending Reviews</p>
+                                </div>
+                            </div>
+                            <div class="dashboard-card">
+                                <div class="card-icon">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h3 id="payroll-processed">$45,200</h3>
+                                    <p>Monthly Payroll</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activities -->
+                        <div class="dashboard-section">
+                            <h3>Recent Activities</h3>
+                            <div class="activity-list">
+                                <div class="activity-item">
+                                    <i class="fas fa-user-plus"></i>
+                                    <div class="activity-content">
+                                        <p><strong>New Employee Added</strong></p>
+                                        <small>Sarah Johnson joined Engineering department - 2 hours ago</small>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <i class="fas fa-chart-line"></i>
+                                    <div class="activity-content">
+                                        <p><strong>Performance Review Completed</strong></p>
+                                        <small>Q4 review for Marketing team completed - 4 hours ago</small>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <i class="fas fa-briefcase"></i>
+                                    <div class="activity-content">
+                                        <p><strong>Job Posted</strong></p>
+                                        <small>Senior Developer position posted - 1 day ago</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Employees Page -->
+                    <div id="employees-page" class="content-page">
+                        <div class="page-header">
+                            <h2>Employee Management</h2>
+                            <button id="add-employee-btn" class="btn btn--primary">
+                                <i class="fas fa-plus"></i> Add Employee
+                            </button>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Department</th>
+                                        <th>Position</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="employees-table-body">
+                                    <!-- Employee data will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Recruitment Page -->
+                    <div id="recruitment-page" class="content-page">
+                        <div class="page-header">
+                            <h2>Recruitment</h2>
+                            <button id="add-job-btn" class="btn btn--primary">
+                                <i class="fas fa-plus"></i> Post Job
+                            </button>
+                        </div>
+                        
+                        <div class="job-grid" id="jobs-grid">
+                            <!-- Job cards will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Performance Page -->
+                    <div id="performance-page" class="content-page">
+                        <div class="page-header">
+                            <h2>Performance Management</h2>
+                            <button id="add-review-btn" class="btn btn--primary">
+                                <i class="fas fa-plus"></i> New Review
+                            </button>
+                        </div>
+                        
+                        <div class="performance-tabs">
+                            <button class="tab-btn active" data-tab="goals">Goals</button>
+                            <button class="tab-btn" data-tab="reviews">Reviews</button>
+                        </div>
+                        
+                        <div class="tab-content">
+                            <div id="goals-tab" class="tab-pane active">
+                                <div class="goals-list" id="goals-list">
+                                    <!-- Goals will be populated here -->
+                                </div>
+                            </div>
+                            <div id="reviews-tab" class="tab-pane">
+                                <div class="reviews-list" id="reviews-list">
+                                    <!-- Reviews will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payroll Page -->
+                    <div id="payroll-page" class="content-page">
+                        <div class="page-header">
+                            <h2>Payroll Management</h2>
+                            <button id="run-payroll-btn" class="btn btn--primary">
+                                <i class="fas fa-play"></i> Run Payroll
+                            </button>
+                        </div>
+                        
+                        <div class="payroll-summary">
+                            <div class="summary-card">
+                                <h3>This Month</h3>
+                                <p class="amount">$45,200</p>
+                                <small>125 employees processed</small>
+                            </div>
+                            <div class="summary-card">
+                                <h3>Pending</h3>
+                                <p class="amount">$3,800</p>
+                                <small>5 employees pending</small>
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Department</th>
+                                        <th>Gross Pay</th>
+                                        <th>Deductions</th>
+                                        <th>Net Pay</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="payroll-table-body">
+                                    <!-- Payroll data will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Admin Page -->
+                    <div id="admin-page" class="content-page">
+                        <div class="page-header">
+                            <h2>Administration</h2>
+                            <button id="add-user-btn" class="btn btn--primary">
+                                <i class="fas fa-plus"></i> Add User
+                            </button>
+                        </div>
+                        
+                        <div class="admin-grid">
+                            <div class="admin-card">
+                                <h3>User Management</h3>
+                                <p>Manage system users and permissions</p>
+                                <div class="admin-stats">
+                                    <span>15 Active Users</span>
+                                </div>
+                            </div>
+                            <div class="admin-card">
+                                <h3>System Settings</h3>
+                                <p>Configure system preferences</p>
+                                <div class="admin-stats">
+                                    <span>Last updated: Today</span>
+                                </div>
+                            </div>
+                            <div class="admin-card">
+                                <h3>Reports</h3>
+                                <p>Generate system reports</p>
+                                <div class="admin-stats">
+                                    <span>12 Reports available</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for forms -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Modal Title</h3>
+                <button id="modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Modal content will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
