@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Button from './Button';
-import useRoles from '../useRole';
+//import useRoles from '../useRole';
 
 const HeaderContainer = styled.header`
   background: ${({ theme }) => theme.colors.primary};
@@ -39,8 +39,8 @@ const LogoutButton = styled(Button)`
 `;
 
 export function Header({ currentUser, onLogout }) {
-  const role = useRoles();
-  console.log('role', role);
+  // const role = useRoles();
+  // console.log('role', role);
 
   return (
     <HeaderContainer>

@@ -10,6 +10,7 @@ import { Payroll } from './components/Payroll';
 import { Admin } from './components/Admin';
 import { LoginForm } from './components/LoginForm';
 import { authService } from './services/auth';
+import { useAuth } from "./context/AuthContext";
 
 // Mock data (replace with real API calls later)
 const initialEmployees = [
@@ -97,103 +98,89 @@ const LoadingScreen = styled.div`
 function App() {
   // State management
   const [currentPage, setCurrentPage] = useState('dashboard');
-  const [currentUser, setCurrentUser] = useState(null); // This will be a user object: { email, role }
+  const { user: currentUser, login, logout, error, loading } = useAuth(); // This will be a user object: { email, role }
   const [employees, setEmployees] = useState(initialEmployees);
   const [jobs, setJobs] = useState(initialJobs);
   const [goals, setGoals] = useState(initialGoals);
   const [reviews, setReviews] = useState(initialReviews);
   const [payrollData, setPayrollData] = useState(initialPayroll);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   // Check for existing authentication on app load
   useEffect(() => {
     const checkAuth = async () => {
       console.log('[App] Checking authentication...');
-      
+
       try {
         const token = localStorage.getItem('accessToken');
         const user = authService.getCurrentUser();
-        
+
         console.log('[App] Token exists:', !!token);
         console.log('[App] User from localStorage:', user);
-        
+
         // If we have token but no valid user, clear everything and show login
         if (token && !user) {
           console.log('[App] Found token but no valid user - clearing corrupted data');
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
           localStorage.removeItem('user');
-          setLoading(false);
           return;
         }
-        
+
         // If we have both token and valid user, restore session
         if (token && user && user.email) {
           console.log('[App] Valid session found, restoring user:', user);
-          setCurrentUser(user);
+          // setCurrentUser(user);
         } else {
           console.log('[App] No valid session found');
         }
-        
+
       } catch (error) {
         console.error('[App] Error during auth check:', error);
         // Clear any corrupted data
         localStorage.clear();
       }
-      
-      setLoading(false);
+
     };
-    
+
     checkAuth();
   }, []);
 
   // Authentication handlers
   const handleLogin = async (credentials) => {
     console.log('[App] Login handler called with:', credentials);
-    setLoading(true);
-    setError(null);
-    
+    // setError(null);
+
     try {
-      const result = await authService.login(credentials);
+      const result = await login(credentials);
       console.log('[App] Login result:', result);
-      
+
       if (result.success && result.user) {
         console.log('[App] Login successful, setting user:', result.user);
-        setCurrentUser(result.user); // Set the full user object
+        // setCurrentUser(result.user); // Set the full user object
         setCurrentPage('dashboard');
-        setSuccess('Login successful!');
-        setTimeout(() => setSuccess(null), 3000);
       } else {
         console.log('[App] Login failed:', result.error);
-        setError(result.error || 'Login failed');
-        setTimeout(() => setError(null), 5000);
+        // setError(result.error || 'Login failed');
+        // setTimeout(() => setError(null), 5000);
       }
     } catch (error) {
       console.error('[App] Login error:', error);
-      setError('Network error. Please try again.');
-      setTimeout(() => setError(null), 5000);
+      // setError('Network error. Please try again.');
+      // setTimeout(() => setError(null), 5000);
     }
-    
-    setLoading(false);
+
   };
 
   const handleLogout = async () => {
     console.log('[App] Logout initiated');
-    setLoading(true);
-    
+
     try {
-      await authService.logout();
-      setCurrentUser(null);
+      await logout();
       setCurrentPage('dashboard');
-      setSuccess('Logged out successfully!');
-      setTimeout(() => setSuccess(null), 3000);
     } catch (error) {
       console.error('[App] Logout error:', error);
     }
-    
-    setLoading(false);
+
   };
 
   // Navigation handler
@@ -209,8 +196,6 @@ function App() {
       status: 'active'
     };
     setEmployees([...employees, newEmployee]);
-    setSuccess('Employee added successfully!');
-    setTimeout(() => setSuccess(null), 3000);
   };
 
   const addJob = (jobData) => {
@@ -221,8 +206,6 @@ function App() {
       status: 'active'
     };
     setJobs([...jobs, newJob]);
-    setSuccess('Job posted successfully!');
-    setTimeout(() => setSuccess(null), 3000);
   };
 
   const addReview = (reviewData) => {
@@ -234,8 +217,6 @@ function App() {
       date: null
     };
     setReviews([...reviews, newReview]);
-    setSuccess('Performance review created successfully!');
-    setTimeout(() => setSuccess(null), 3000);
   };
 
   const runPayroll = () => {
@@ -244,8 +225,6 @@ function App() {
       status: 'processed'
     }));
     setPayrollData(updatedPayroll);
-    setSuccess('Payroll processed successfully!');
-    setTimeout(() => setSuccess(null), 3000);
   };
 
   // Render current page
@@ -304,20 +283,18 @@ function App() {
   console.log('[App] Rendering main app for user:', currentUser);
   return (
     <AppLayout>
-      <SideNav 
+      <SideNav
         pages={PAGES}
         currentPage={currentPage}
         onNavigate={navigateToPage}
         currentUser={currentUser} // Pass full user object: { email, role }
       />
       <MainContent>
-        <Header 
+        <Header
           currentUser={currentUser} // Pass full user object: { email, role }
           onLogout={handleLogout}
         />
         <ContentArea>
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-          {success && <SuccessMessage>{success}</SuccessMessage>}
           {renderCurrentPage()}
         </ContentArea>
       </MainContent>
