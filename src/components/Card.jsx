@@ -28,6 +28,7 @@ export const CardTitle = styled.h3`
   margin: 0;
   color: ${({ theme }) => theme.colors.textPrimary};
   font-size: ${({ theme }) => theme.fontSize.xl};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   font-weight: 600;
 `;
 
@@ -35,6 +36,7 @@ export const CardSubtitle = styled.p`
   margin: ${({ theme }) => theme.spacing.sm} 0 0 0;
   color: ${({ theme }) => theme.colors.textSecondary};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 export const CardContent = styled.div`

@@ -48,12 +48,14 @@ export const ModalTitle = styled.h3`
   margin: 0;
   color: ${({ theme }) => theme.colors.textPrimary};
   font-size: ${({ theme }) => theme.fontSize.xl};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 export const CloseButton = styled.button`
   background: none;
   border: none;
   font-size: ${({ theme }) => theme.fontSize.xl};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   color: ${({ theme }) => theme.colors.textSecondary};
   cursor: pointer;
   padding: ${({ theme }) => theme.spacing.sm};

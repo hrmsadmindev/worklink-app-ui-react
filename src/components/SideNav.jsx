@@ -17,7 +17,8 @@ const NavButton = styled.button`
   border: none;
   border-radius: ${({ theme }) => theme.borderRadius.md};
   padding: ${({ theme }) => theme.spacing.md};
-  font-size: ${({ theme }) => theme.fontSize.md};
+  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
   text-align: left;
   cursor: pointer;
@@ -39,7 +40,8 @@ const NavTitle = styled.h3`
   color: ${({ theme }) => theme.colors.textPrimary};
   margin: 0 0 ${({ theme }) => theme.spacing.lg} 0;
   padding: 0 ${({ theme }) => theme.spacing.md};
-  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-size: ${({ theme }) => theme.fontSize.xxl};
+  font-family: ${({ theme }) => theme.typography.fonts.heading};
 `;
 
 export function SideNav({ pages, currentPage, onNavigate, currentUser }) {

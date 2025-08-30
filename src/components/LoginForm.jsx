@@ -25,6 +25,7 @@ const LoginTitle = styled.h1`
   text-align: center;
   margin-bottom: ${({ theme }) => theme.spacing.xl};
   font-size: ${({ theme }) => theme.fontSize.xxl};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const Form = styled.form`
@@ -43,6 +44,7 @@ const Label = styled.label`
   color: ${({ theme }) => theme.colors.textPrimary};
   font-weight: 600;
   font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const Input = styled.input`
@@ -50,6 +52,7 @@ const Input = styled.input`
   border: 2px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   transition: border-color 0.3s;
   
   &:focus {
@@ -83,6 +86,7 @@ const DemoTitle = styled.h3`
   color: ${({ theme }) => theme.colors.textPrimary};
   margin-bottom: ${({ theme }) => theme.spacing.md};
   font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const DemoList = styled.ul`
@@ -92,6 +96,7 @@ const DemoList = styled.ul`
   li {
     color: ${({ theme }) => theme.colors.textSecondary};
     font-size: ${({ theme }) => theme.fontSize.sm};
+    font-family: ${({ theme }) => theme.typography.fonts.primary};
     margin-bottom: ${({ theme }) => theme.spacing.xs};
     font-family: monospace;
     cursor: pointer;

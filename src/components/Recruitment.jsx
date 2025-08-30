@@ -20,6 +20,7 @@ const PageTitle = styled.h2`
   color: ${({ theme }) => theme.colors.textPrimary};
   margin: 0;
   font-size: ${({ theme }) => theme.fontSize.xxxl};
+  font-family: ${({ theme }) => theme.typography.fonts.heading};
 `;
 
 const JobGrid = styled.div`
@@ -45,11 +46,13 @@ const JobTitle = styled.h3`
   color: ${({ theme }) => theme.colors.textPrimary};
   margin: 0 0 ${({ theme }) => theme.spacing.sm} 0;
   font-size: ${({ theme }) => theme.fontSize.xl};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const JobDepartment = styled.div`
   color: ${({ theme }) => theme.colors.textSecondary};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const JobMeta = styled.div`
@@ -57,6 +60,7 @@ const JobMeta = styled.div`
   gap: ${({ theme }) => theme.spacing.lg};
   margin-bottom: ${({ theme }) => theme.spacing.md};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   color: ${({ theme }) => theme.colors.textSecondary};
 `;
 
@@ -72,6 +76,7 @@ const ApplicantCount = styled.div`
   padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   font-weight: 600;
   text-align: center;
 `;
@@ -92,6 +97,7 @@ const Label = styled.label`
   font-weight: 500;
   margin-bottom: ${({ theme }) => theme.spacing.sm};
   font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const Input = styled.input`
@@ -99,6 +105,7 @@ const Input = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   color: ${({ theme }) => theme.colors.textPrimary};
   background: ${({ theme }) => theme.colors.white};
 
@@ -114,6 +121,7 @@ const TextArea = styled.textarea`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   color: ${({ theme }) => theme.colors.textPrimary};
   background: ${({ theme }) => theme.colors.white};
   min-height: 100px;
@@ -132,6 +140,7 @@ const Select = styled.select`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   color: ${({ theme }) => theme.colors.textPrimary};
   background: ${({ theme }) => theme.colors.white};
   cursor: pointer;

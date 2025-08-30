@@ -11,6 +11,7 @@ const PageTitle = styled.h2`
   color: ${({ theme }) => theme.colors.textPrimary};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   font-size: ${({ theme }) => theme.fontSize.xxxl};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const StatsGrid = styled.div`
@@ -27,6 +28,7 @@ const StatCard = styled(Card)`
 
 const StatNumber = styled.div`
   font-size: ${({ theme }) => theme.fontSize.xxxl};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   font-weight: bold;
   color: ${({ theme }) => theme.colors.primary};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
@@ -35,6 +37,7 @@ const StatNumber = styled.div`
 const StatLabel = styled.div`
   color: ${({ theme }) => theme.colors.textSecondary};
   font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const WelcomeCard = styled(Card)`
@@ -46,22 +49,28 @@ const WelcomeCard = styled(Card)`
 const WelcomeTitle = styled.h3`
   margin: 0 0 ${({ theme }) => theme.spacing.md} 0;
   font-size: ${({ theme }) => theme.fontSize.xxl};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const WelcomeText = styled.p`
   margin: 0;
   opacity: 0.9;
   font-size: ${({ theme }) => theme.fontSize.lg};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const RecentActivities = styled.div`
   margin-top: ${({ theme }) => theme.spacing.xxl};
+  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const ActivityList = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.md};
+  font-size: ${({ theme }) => theme.fontSize.lg};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const ActivityItem = styled.div`
@@ -100,6 +109,7 @@ const ActivityTitle = styled.div`
 const ActivityDescription = styled.div`
   color: ${({ theme }) => theme.colors.textSecondary};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 export function Dashboard({ employees, jobs, reviews, payrollData, currentUser }) {
@@ -149,7 +159,7 @@ export function Dashboard({ employees, jobs, reviews, payrollData, currentUser }
       <PageTitle>Dashboard</PageTitle>
       
       <WelcomeCard>
-        <WelcomeTitle>Welcome, {currentUser?.name}!</WelcomeTitle>
+        <WelcomeTitle>Welcome {currentUser?.name}!</WelcomeTitle>
         <WelcomeText>{getRoleBasedWelcome()}</WelcomeText>
       </WelcomeCard>
 
@@ -170,7 +180,7 @@ export function Dashboard({ employees, jobs, reviews, payrollData, currentUser }
         </StatCard>
         
         <StatCard>
-          <StatNumber>${processedPayroll.toLocaleString()}</StatNumber>
+          <StatNumber>₹{processedPayroll.toLocaleString()}</StatNumber>
           <StatLabel>Processed Payroll</StatLabel>
         </StatCard>
       </StatsGrid>

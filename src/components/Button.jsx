@@ -6,6 +6,7 @@ const Button = styled.button`
   padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -78,11 +79,13 @@ const Button = styled.button`
         return `
           padding: ${theme.spacing.xs} ${theme.spacing.sm};
           font-size: ${theme.fontSize.sm};
+          font-family: ${({ theme }) => theme.typography.fonts.primary};
         `;
       case 'large':
         return `
           padding: ${theme.spacing.md} ${theme.spacing.lg};
           font-size: ${theme.fontSize.lg};
+          font-family: ${({ theme }) => theme.typography.fonts.primary};
         `;
       default:
         return '';

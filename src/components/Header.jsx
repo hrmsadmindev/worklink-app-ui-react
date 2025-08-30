@@ -15,6 +15,7 @@ const HeaderContainer = styled.header`
 
 const Brand = styled.h1`
   font-size: ${({ theme }) => theme.fontSize.xxl};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   margin: 0;
 `;
 
@@ -26,6 +27,7 @@ const UserInfo = styled.div`
 
 const WelcomeText = styled.span`
   font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const LogoutButton = styled(Button)`

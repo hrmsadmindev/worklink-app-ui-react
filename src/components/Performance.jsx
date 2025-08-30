@@ -13,6 +13,7 @@ const PageTitle = styled.h2`
   color: ${({ theme }) => theme.colors.textPrimary};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   font-size: ${({ theme }) => theme.fontSize.xxxl};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const TabContainer = styled.div`
@@ -22,6 +23,8 @@ const TabContainer = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   padding: ${({ theme }) => theme.spacing.sm};
   box-shadow: ${({ theme }) => theme.shadows.sm};
+  font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const TabButton = styled.button`
@@ -34,6 +37,8 @@ const TabButton = styled.button`
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s ease;
+  font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 
   &:hover {
     background: ${({ active, theme }) => (active ? theme.colors.primary : theme.colors.secondary)};
@@ -64,12 +69,14 @@ const GoalTitle = styled.h4`
   margin: 0;
   color: ${({ theme }) => theme.colors.textPrimary};
   font-size: ${({ theme }) => theme.fontSize.lg};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const StatusBadge = styled.span`
   padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   font-weight: 500;
   text-transform: uppercase;
   
@@ -102,12 +109,15 @@ const StatusBadge = styled.span`
 const GoalEmployee = styled.div`
   color: ${({ theme }) => theme.colors.textSecondary};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 const GoalDescription = styled.p`
   color: ${({ theme }) => theme.colors.textPrimary};
   margin: 0 0 ${({ theme }) => theme.spacing.md} 0;
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const ProgressBar = styled.div`
@@ -127,6 +137,7 @@ const ProgressFill = styled.div`
 
 const ProgressText = styled.div`
   font-size: ${({ theme }) => theme.fontSize.sm};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   color: ${({ theme }) => theme.colors.textSecondary};
   text-align: right;
 `;
@@ -150,16 +161,19 @@ const ReviewEmployee = styled.h4`
   margin: 0;
   color: ${({ theme }) => theme.colors.textPrimary};
   font-size: ${({ theme }) => theme.fontSize.lg};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const ReviewMeta = styled.div`
   color: ${({ theme }) => theme.colors.textSecondary};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const RatingStars = styled.div`
   color: ${({ theme }) => theme.colors.warning};
   font-size: ${({ theme }) => theme.fontSize.lg};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   margin-top: ${({ theme }) => theme.spacing.sm};
 `;
 
@@ -191,6 +205,7 @@ const Select = styled.select`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   color: ${({ theme }) => theme.colors.textPrimary};
   background: ${({ theme }) => theme.colors.white};
 
@@ -206,6 +221,7 @@ const Input = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   color: ${({ theme }) => theme.colors.textPrimary};
 
   &:focus {

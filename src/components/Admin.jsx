@@ -12,6 +12,7 @@ const PageTitle = styled.h2`
   color: ${({ theme }) => theme.colors.textPrimary};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   font-size: ${({ theme }) => theme.fontSize.xxxl};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const AdminGrid = styled.div`
@@ -38,6 +39,7 @@ const AdminCardIcon = styled.div`
   align-items: center;
   justify-content: center;
   font-size: ${({ theme }) => theme.fontSize.xxl};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
@@ -45,6 +47,7 @@ const AdminCardTitle = styled.h3`
   color: ${({ theme }) => theme.colors.textPrimary};
   margin: 0 0 ${({ theme }) => theme.spacing.sm} 0;
   font-size: ${({ theme }) => theme.fontSize.xl};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const AdminCardDescription = styled.p`
@@ -58,6 +61,7 @@ const AdminStats = styled.div`
   padding: ${({ theme }) => theme.spacing.md};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   color: ${({ theme }) => theme.colors.primary};
   font-weight: 600;
   text-align: center;
@@ -72,6 +76,7 @@ const AccessDenied = styled.div`
 
 const AccessDeniedIcon = styled.div`
   font-size: 4rem;
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 

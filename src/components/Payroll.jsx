@@ -19,6 +19,7 @@ const PageTitle = styled.h2`
   color: ${({ theme }) => theme.colors.textPrimary};
   margin: 0;
   font-size: ${({ theme }) => theme.fontSize.xxxl};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const SummaryGrid = styled.div`
@@ -36,12 +37,14 @@ const SummaryCard = styled(Card)`
 const SummaryTitle = styled.h3`
   color: ${({ theme }) => theme.colors.textSecondary};
   font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   margin: 0 0 ${({ theme }) => theme.spacing.sm} 0;
   font-weight: 500;
 `;
 
 const SummaryAmount = styled.div`
   font-size: ${({ theme }) => theme.fontSize.xxxl};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   font-weight: bold;
   color: ${({ theme }) => theme.colors.primary};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
@@ -50,6 +53,7 @@ const SummaryAmount = styled.div`
 const SummarySubtext = styled.div`
   color: ${({ theme }) => theme.colors.textSecondary};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const Table = styled.table`
@@ -81,18 +85,21 @@ const TableHeaderCell = styled.th`
   font-weight: 600;
   color: ${({ theme }) => theme.colors.textPrimary};
   font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const TableCell = styled.td`
   padding: ${({ theme }) => theme.spacing.lg};
   color: ${({ theme }) => theme.colors.textPrimary};
   font-size: ${({ theme }) => theme.fontSize.md};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const StatusBadge = styled.span`
   padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  font-family: ${({ theme }) => theme.typography.fonts.primary};
   font-weight: 500;
   text-transform: uppercase;
   
@@ -143,25 +150,25 @@ export function Payroll({ payrollData, onRunPayroll }) {
       <SummaryGrid>
         <SummaryCard>
           <SummaryTitle>This Month</SummaryTitle>
-          <SummaryAmount>${totalProcessed.toLocaleString()}</SummaryAmount>
+          <SummaryAmount>₹{totalProcessed.toLocaleString()}</SummaryAmount>
           <SummarySubtext>{processedPayroll.length} employees processed</SummarySubtext>
         </SummaryCard>
         
         <SummaryCard>
           <SummaryTitle>Pending</SummaryTitle>
-          <SummaryAmount>${totalPending.toLocaleString()}</SummaryAmount>
+          <SummaryAmount>₹{totalPending.toLocaleString()}</SummaryAmount>
           <SummarySubtext>{pendingPayroll.length} employees pending</SummarySubtext>
         </SummaryCard>
         
         <SummaryCard>
           <SummaryTitle>Total Gross</SummaryTitle>
-          <SummaryAmount>${totalGross.toLocaleString()}</SummaryAmount>
+          <SummaryAmount>₹{totalGross.toLocaleString()}</SummaryAmount>
           <SummarySubtext>Before deductions</SummarySubtext>
         </SummaryCard>
         
         <SummaryCard>
           <SummaryTitle>Total Deductions</SummaryTitle>
-          <SummaryAmount>${totalDeductions.toLocaleString()}</SummaryAmount>
+          <SummaryAmount>₹{totalDeductions.toLocaleString()}</SummaryAmount>
           <SummarySubtext>Taxes & benefits</SummarySubtext>
         </SummaryCard>
       </SummaryGrid>
