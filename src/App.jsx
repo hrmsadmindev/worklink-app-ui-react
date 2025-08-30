@@ -242,18 +242,18 @@ function App() {
  // Render current page
  const renderCurrentPage = () => {
    const pageProps = {
-     employees, // This is now from API for dashboard stats
-     jobs,
-     goals,
-     reviews,
-     payrollData,
-     currentUser,
-     // Remove onAddEmployee - now handled within Employees component
-     onAddJob: addJob,
-     onAddReview: addReview,
-     onRunPayroll: runPayroll,
-     employeesLoading,
-     employeesError
+     employees,
+    jobs,
+    goals,
+    reviews,
+    payrollData,
+    currentUser,
+    onAddJob: addJob,
+    onAddReview: addReview,
+    onRunPayroll: runPayroll,
+    employeesLoading,
+    employeesError,
+    onNavigate: navigateToPage
    };
 
    switch (currentPage) {

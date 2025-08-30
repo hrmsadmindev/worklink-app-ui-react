@@ -1,4 +1,4 @@
-// components/Employees.jsx - With Horizontal Scrollable Table
+// components/Employees.jsx - With Horizontal Scrollable Table and Modal Error Handling
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Card, { CardTitle } from './Card';
@@ -28,9 +28,11 @@ const PageTitle = styled.h2`
  color: ${({ theme }) => theme.colors.textPrimary};
  margin: 0;
  font-size: ${({ theme }) => theme.fontSize.xxxl};
+ font-family: ${({ theme }) => theme.typography.fonts.primary};
 
  @media (max-width: 768px) {
    font-size: ${({ theme }) => theme.fontSize.xxl};
+   font-family: ${({ theme }) => theme.typography.fonts.primary};
    text-align: center;
  }
 `;
@@ -52,6 +54,7 @@ const SearchInput = styled.input`
  border: 1px solid ${({ theme }) => theme.colors.border};
  border-radius: ${({ theme }) => theme.borderRadius.md};
  font-size: ${({ theme }) => theme.fontSize.md};
+ font-family: ${({ theme }) => theme.typography.fonts.primary};
  color: ${({ theme }) => theme.colors.textPrimary};
  background: ${({ theme }) => theme.colors.white};
  min-width: 300px;
@@ -77,7 +80,7 @@ const SearchButtonGroup = styled.div`
  }
 `;
 
-// NEW: Table container with horizontal scroll
+// Table container with horizontal scroll
 const TableContainer = styled.div`
  width: 100%;
  overflow-x: auto;
@@ -139,6 +142,7 @@ const TableHeaderCell = styled.th`
  font-weight: 600;
  color: ${({ theme }) => theme.colors.textPrimary};
  font-size: ${({ theme }) => theme.fontSize.md};
+ font-family: ${({ theme }) => theme.typography.fonts.primary};
  white-space: nowrap;
  min-width: ${({ minWidth }) => minWidth || 'auto'};
 
@@ -173,6 +177,7 @@ const TableCell = styled.td`
  padding: ${({ theme }) => theme.spacing.lg};
  color: ${({ theme }) => theme.colors.textPrimary};
  font-size: ${({ theme }) => theme.fontSize.md};
+ font-family: ${({ theme }) => theme.typography.fonts.primary};
  white-space: nowrap;
  overflow: hidden;
  text-overflow: ellipsis;
@@ -192,6 +197,7 @@ const StatusBadge = styled.span`
  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
  border-radius: ${({ theme }) => theme.borderRadius.sm};
  font-size: ${({ theme }) => theme.fontSize.sm};
+ font-family: ${({ theme }) => theme.typography.fonts.primary};
  font-weight: 500;
  text-transform: uppercase;
  white-space: nowrap;
@@ -254,6 +260,7 @@ const Label = styled.label`
  font-weight: 500;
  margin-bottom: ${({ theme }) => theme.spacing.sm};
  font-size: ${({ theme }) => theme.fontSize.md};
+ font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const Input = styled.input`
@@ -261,6 +268,7 @@ const Input = styled.input`
  border: 1px solid ${({ theme }) => theme.colors.border};
  border-radius: ${({ theme }) => theme.borderRadius.md};
  font-size: ${({ theme }) => theme.fontSize.md};
+ font-family: ${({ theme }) => theme.typography.fonts.primary};
  color: ${({ theme }) => theme.colors.textPrimary};
  background: ${({ theme }) => theme.colors.white};
  transition: border-color 0.2s ease;
@@ -282,6 +290,7 @@ const Select = styled.select`
  border: 1px solid ${({ theme }) => theme.colors.border};
  border-radius: ${({ theme }) => theme.borderRadius.md};
  font-size: ${({ theme }) => theme.fontSize.md};
+ font-family: ${({ theme }) => theme.typography.fonts.primary};
  color: ${({ theme }) => theme.colors.textPrimary};
  background: ${({ theme }) => theme.colors.white};
  cursor: pointer;
@@ -305,6 +314,7 @@ const LoadingMessage = styled.div`
  padding: ${({ theme }) => theme.spacing.xxl};
  color: ${({ theme }) => theme.colors.textSecondary};
  font-size: ${({ theme }) => theme.fontSize.lg};
+ font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
 const ErrorMessage = styled.div`
@@ -314,6 +324,17 @@ const ErrorMessage = styled.div`
  border-radius: ${({ theme }) => theme.borderRadius.md};
  margin-bottom: ${({ theme }) => theme.spacing.lg};
  text-align: center;
+`;
+
+// NEW: Form error message for inside modal
+const FormErrorMessage = styled.div`
+ background: ${({ theme }) => theme.colors.danger};
+ color: white;
+ padding: ${({ theme }) => theme.spacing.md};
+ border-radius: ${({ theme }) => theme.borderRadius.md};
+ margin-bottom: ${({ theme }) => theme.spacing.lg};
+ text-align: center;
+ font-size: ${({ theme }) => theme.fontSize.sm};
 `;
 
 const SuccessMessage = styled.div`
@@ -331,11 +352,12 @@ const EmptyState = styled.div`
  color: ${({ theme }) => theme.colors.textSecondary};
 `;
 
-// NEW: Scroll hint for mobile users
+// Scroll hint for mobile users
 const ScrollHint = styled.div`
  text-align: center;
  color: ${({ theme }) => theme.colors.textSecondary};
  font-size: ${({ theme }) => theme.fontSize.sm};
+ font-family: ${({ theme }) => theme.typography.fonts.primary};
  margin-bottom: ${({ theme }) => theme.spacing.md};
 
  @media (min-width: 1200px) {
@@ -347,6 +369,7 @@ export function Employees() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [formError, setFormError] = useState(null); // NEW: Separate form error state
   const [success, setSuccess] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -411,12 +434,13 @@ export function Employees() {
     }
   };
 
+  // UPDATED: handleSubmit function with form error handling
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       setSubmitting(true);
-      setError(null);
+      setFormError(null);  // Clear form error instead of general error
       setSuccess(null);
 
       console.log('[Employees] Submitting employee:', formData);
@@ -449,11 +473,11 @@ export function Employees() {
         setTimeout(() => setSuccess(null), 3000);
       } else {
         console.error('[Employees] Failed to create employee:', result.error);
-        setError(result.error);
+        setFormError(result.error); // Set form error instead of general error
       }
     } catch (error) {
       console.error('[Employees] Error creating employee:', error);
-      setError('Failed to create employee');
+      setFormError('Failed to create employee'); // Set form error instead of general error
     } finally {
       setSubmitting(false);
     }
@@ -517,6 +541,14 @@ export function Employees() {
       return () => clearTimeout(timer);
     }
   }, [error]);
+
+  // NEW: Clear form error after 8 seconds
+  useEffect(() => {
+    if (formError) {
+      const timer = setTimeout(() => setFormError(null), 8000);
+      return () => clearTimeout(timer);
+    }
+  }, [formError]);
 
   return (
     <EmployeesContainer>
@@ -608,7 +640,7 @@ export function Employees() {
                           <Button 
                             size="small" 
                             variant="danger"
-                            onClick={() => handleDeleteEmployee(employee.id)}
+                            onClick={() => handleDeleteEmployee(employee.employeeId)}
                           >
                             Delete
                           </Button>
@@ -624,12 +656,18 @@ export function Employees() {
       </Card>
 
       {showModal && (
-        <Modal onClose={() => setShowModal(false)}>
+        <Modal onClose={() => {
+          setShowModal(false);
+          setFormError(null); // Clear form error when closing modal
+        }}>
           <ModalContent>
             <ModalHeader>
               <CardTitle>Add New Employee</CardTitle>
             </ModalHeader>
             <ModalBody>
+              {/* NEW: Show form errors inside modal */}
+              {formError && <FormErrorMessage>{formError}</FormErrorMessage>}
+
               <Form onSubmit={handleSubmit}>
                 <FormRow>
                   <FormGroup>
@@ -759,7 +797,10 @@ export function Employees() {
                   <Button 
                     type="button" 
                     variant="secondary" 
-                    onClick={() => setShowModal(false)}
+                    onClick={() => {
+                      setShowModal(false);
+                      setFormError(null); // Clear form error when canceling
+                    }}
                     disabled={submitting}
                   >
                     Cancel

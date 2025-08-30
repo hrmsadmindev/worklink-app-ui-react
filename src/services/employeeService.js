@@ -58,14 +58,8 @@ export const employeeService = {
   // Create new employee
   async createEmployee(employeeData) {
     try {
-      // Generate employee ID if not provided
-      if (!employeeData.employeeId) {
-        employeeData.employeeId = `EMP${Date.now()}`;
-      }
-
       // Set default values
       const employeePayload = {
-        employeeId: employeeData.employeeId,
         firstName: employeeData.firstName,
         lastName: employeeData.lastName,
         email: employeeData.email,
