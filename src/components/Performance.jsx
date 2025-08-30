@@ -1,4 +1,4 @@
-// components/Performance.jsx - Updated to load goals by employeeId
+// components/Performance.jsx - Fixed employeeId null issue
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Card, { CardTitle } from './Card';
@@ -6,8 +6,6 @@ import Button from './Button';
 import { Modal, ModalContent, ModalHeader, ModalBody } from './Modal';
 import { performanceService } from '../services/performanceService';
 import { employeeService } from '../services/employeeService';
-
-// ... (keep all the existing styled components - they remain the same)
 
 const PerformanceContainer = styled.div`
  max-width: 1200px;
@@ -34,7 +32,6 @@ const PageTitle = styled.h2`
  font-family: ${({ theme }) => theme.typography.fonts.primary};
 `;
 
-// NEW: Employee selector section
 const EmployeeSelector = styled.div`
  display: flex;
  align-items: center;
@@ -75,8 +72,6 @@ const EmployeeSelect = styled.select`
    cursor: not-allowed;
  }
 `;
-
-// ... (keep all other existing styled components)
 
 const TabContainer = styled.div`
  display: flex;
@@ -156,12 +151,10 @@ const EmptyState = styled.div`
  color: ${({ theme }) => theme.colors.textSecondary};
 `;
 
-// ... (include all the other styled components from the previous version)
-
 export function Performance({ currentUser }) {
   const [activeTab, setActiveTab] = useState('goals');
 
-  // NEW: Selected employee state
+  // Selected employee state - using employeeId (database column)
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
 
   // State for goals
@@ -185,7 +178,7 @@ export function Performance({ currentUser }) {
   const [success, setSuccess] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // Goal form data
+  // Goal form data - FIXED: Initialize with proper employeeId
   const [goalFormData, setGoalFormData] = useState({
     employeeId: '',
     goalTitle: '',
@@ -194,7 +187,7 @@ export function Performance({ currentUser }) {
     targetDate: ''
   });
 
-  // Review form data
+  // Review form data - FIXED: Initialize with proper employeeId
   const [reviewFormData, setReviewFormData] = useState({
     employeeId: '',
     reviewerId: '',
@@ -215,12 +208,22 @@ export function Performance({ currentUser }) {
   // Load goals and reviews when selected employee changes
   useEffect(() => {
     if (selectedEmployeeId) {
+      console.log('[Performance] Selected employee changed to:', selectedEmployeeId);
       loadGoals(selectedEmployeeId);
       loadReviews(selectedEmployeeId);
     } else {
       // Clear data when no employee is selected
       setGoals([]);
       setReviews([]);
+    }
+  }, [selectedEmployeeId]);
+
+  // FIXED: Update form data when selected employee changes
+  useEffect(() => {
+    if (selectedEmployeeId) {
+      console.log('[Performance] Updating form data with selectedEmployeeId:', selectedEmployeeId);
+      setGoalFormData(prev => ({ ...prev, employeeId: selectedEmployeeId }));
+      setReviewFormData(prev => ({ ...prev, employeeId: selectedEmployeeId }));
     }
   }, [selectedEmployeeId]);
 
@@ -231,9 +234,10 @@ export function Performance({ currentUser }) {
       const result = await employeeService.getAllEmployees();
 
       if (result.success) {
+        console.log('[Performance] Loaded employees:', result.data);
         setEmployees(result.data || []);
 
-        // NEW: Auto-select current user if they are an employee
+        // Auto-select current user if they are an employee (using employeeId)
         if (result.data && result.data.length > 0 && currentUser) {
           // Try to find current user in employee list
           const currentEmployee = result.data.find(emp => 
@@ -241,9 +245,11 @@ export function Performance({ currentUser }) {
           );
 
           if (currentEmployee) {
+            console.log('[Performance] Auto-selecting current user:', currentEmployee);
             setSelectedEmployeeId(currentEmployee.employeeId.toString());
           } else if (currentUser.role === 'ADMIN' || currentUser.role === 'MANAGER') {
             // For admin/manager, default to first employee
+            console.log('[Performance] Auto-selecting first employee for admin/manager');
             setSelectedEmployeeId(result.data[0].employeeId.toString());
           }
         }
@@ -257,7 +263,6 @@ export function Performance({ currentUser }) {
     }
   };
 
-  // NEW: Updated loadGoals function to accept employeeId parameter
   const loadGoals = async (employeeId) => {
     if (!employeeId) return;
 
@@ -265,9 +270,7 @@ export function Performance({ currentUser }) {
       setGoalsLoading(true);
       setGoalsError(null);
 
-      console.log('[Performance] Loading goals for employee:', employeeId);
-
-      // Use the existing getGoalsByEmployeeId method
+      console.log('[Performance] Loading goals for employee ID:', employeeId);
       const result = await performanceService.getGoalsByEmployeeId(employeeId);
 
       if (result.success) {
@@ -285,7 +288,6 @@ export function Performance({ currentUser }) {
     }
   };
 
-  // NEW: Updated loadReviews function to accept employeeId parameter
   const loadReviews = async (employeeId) => {
     if (!employeeId) return;
 
@@ -293,9 +295,7 @@ export function Performance({ currentUser }) {
       setReviewsLoading(true);
       setReviewsError(null);
 
-      console.log('[Performance] Loading reviews for employee:', employeeId);
-
-      // Use the existing getReviewsByEmployeeId method
+      console.log('[Performance] Loading reviews for employee ID:', employeeId);
       const result = await performanceService.getReviewsByEmployeeId(employeeId);
 
       if (result.success) {
@@ -315,10 +315,12 @@ export function Performance({ currentUser }) {
 
   // Handle employee selection change
   const handleEmployeeChange = (e) => {
-    setSelectedEmployeeId(e.target.value);
+    const newEmployeeId = e.target.value;
+    console.log('[Performance] Employee selection changed to:', newEmployeeId);
+    setSelectedEmployeeId(newEmployeeId);
   };
 
-  // Handle goal form submission
+  // FIXED: Handle goal form submission with proper employeeId validation
   const handleGoalSubmit = async (e) => {
     e.preventDefault();
 
@@ -326,16 +328,36 @@ export function Performance({ currentUser }) {
       setSubmitting(true);
       setFormError(null);
 
-      console.log('[Performance] Submitting goal:', goalFormData);
-      const result = await performanceService.createGoal(goalFormData);
+      // FIXED: Ensure we have a valid employeeId
+      const finalEmployeeId = goalFormData.employeeId || selectedEmployeeId;
+
+      if (!finalEmployeeId) {
+        setFormError('Please select an employee');
+        return;
+      }
+
+      // FIXED: Convert to integer and ensure it's not null/undefined
+      const goalDataToSubmit = {
+        employeeId: parseInt(finalEmployeeId), // Convert to integer
+        goalTitle: goalFormData.goalTitle,
+        goalDescription: goalFormData.goalDescription,
+        priority: goalFormData.priority,
+        targetDate: goalFormData.targetDate
+      };
+
+      console.log('[Performance] Submitting goal with data:', goalDataToSubmit);
+      console.log('[Performance] employeeId type:', typeof goalDataToSubmit.employeeId);
+      console.log('[Performance] employeeId value:', goalDataToSubmit.employeeId);
+
+      const result = await performanceService.createGoal(goalDataToSubmit);
 
       if (result.success) {
         console.log('[Performance] Goal created successfully:', result.data);
         setSuccess('Goal created successfully!');
 
-        // Reset form
+        // Reset form but keep employeeId
         setGoalFormData({
-          employeeId: '',
+          employeeId: selectedEmployeeId,
           goalTitle: '',
           goalDescription: '',
           priority: 'MEDIUM',
@@ -363,7 +385,7 @@ export function Performance({ currentUser }) {
     }
   };
 
-  // Handle review form submission
+  // FIXED: Handle review form submission with proper employeeId validation
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
 
@@ -371,22 +393,45 @@ export function Performance({ currentUser }) {
       setSubmitting(true);
       setFormError(null);
 
-      // Convert rating to integer if provided
-      const reviewData = {
-        ...reviewFormData,
-        overallRating: reviewFormData.overallRating ? parseInt(reviewFormData.overallRating) : null
+      // FIXED: Ensure we have valid employeeId and reviewerId
+      const finalEmployeeId = reviewFormData.employeeId || selectedEmployeeId;
+
+      if (!finalEmployeeId) {
+        setFormError('Please select an employee');
+        return;
+      }
+
+      if (!reviewFormData.reviewerId) {
+        setFormError('Please select a reviewer');
+        return;
+      }
+
+      // FIXED: Convert to integers and ensure they're not null/undefined
+      const reviewDataToSubmit = {
+        employeeId: parseInt(finalEmployeeId), // Convert to integer
+        reviewerId: parseInt(reviewFormData.reviewerId), // Convert to integer
+        reviewType: reviewFormData.reviewType,
+        reviewPeriodStart: reviewFormData.reviewPeriodStart || null,
+        reviewPeriodEnd: reviewFormData.reviewPeriodEnd || null,
+        overallRating: reviewFormData.overallRating ? parseInt(reviewFormData.overallRating) : null,
+        strengths: reviewFormData.strengths || '',
+        areasForImprovement: reviewFormData.areasForImprovement || '',
+        comments: reviewFormData.comments || ''
       };
 
-      console.log('[Performance] Submitting review:', reviewData);
-      const result = await performanceService.createReview(reviewData);
+      console.log('[Performance] Submitting review with data:', reviewDataToSubmit);
+      console.log('[Performance] employeeId type:', typeof reviewDataToSubmit.employeeId);
+      console.log('[Performance] reviewerId type:', typeof reviewDataToSubmit.reviewerId);
+
+      const result = await performanceService.createReview(reviewDataToSubmit);
 
       if (result.success) {
         console.log('[Performance] Review created successfully:', result.data);
         setSuccess('Review created successfully!');
 
-        // Reset form
+        // Reset form but keep employeeId
         setReviewFormData({
-          employeeId: '',
+          employeeId: selectedEmployeeId,
           reviewerId: '',
           reviewType: 'ANNUAL',
           reviewPeriodStart: '',
@@ -419,6 +464,7 @@ export function Performance({ currentUser }) {
   };
 
   const handleGoalChange = (e) => {
+    console.log('[Performance] Goal form field changed:', e.target.name, '=', e.target.value);
     setGoalFormData({
       ...goalFormData,
       [e.target.name]: e.target.value
@@ -426,22 +472,23 @@ export function Performance({ currentUser }) {
   };
 
   const handleReviewChange = (e) => {
+    console.log('[Performance] Review form field changed:', e.target.name, '=', e.target.value);
     setReviewFormData({
       ...reviewFormData,
       [e.target.name]: e.target.value
     });
   };
 
-  // Get employee name by ID
+  // Get employee name by employeeId (database column)
   const getEmployeeName = (employeeId) => {
-    const employee = employees.find(emp => emp.employeeId === employeeId);
+    const employee = employees.find(emp => emp.employeeId == employeeId);
     return employee ? `${employee.firstName} ${employee.lastName}` : `Employee #${employeeId}`;
   };
 
   // Get selected employee name for display
   const getSelectedEmployeeName = () => {
     if (!selectedEmployeeId) return 'No employee selected';
-    return getEmployeeName(parseInt(selectedEmployeeId));
+    return getEmployeeName(selectedEmployeeId);
   };
 
   // Render star rating
@@ -465,11 +512,12 @@ export function Performance({ currentUser }) {
     }
   }, [formError]);
 
+  // FIXED: Handle modal close with proper form reset
   const handleModalClose = (type) => {
     if (type === 'goal') {
       setShowGoalModal(false);
       setGoalFormData({
-        employeeId: '',
+        employeeId: selectedEmployeeId, // FIXED: Keep selected employee
         goalTitle: '',
         goalDescription: '',
         priority: 'MEDIUM',
@@ -478,7 +526,7 @@ export function Performance({ currentUser }) {
     } else {
       setShowReviewModal(false);
       setReviewFormData({
-        employeeId: '',
+        employeeId: selectedEmployeeId, // FIXED: Keep selected employee
         reviewerId: '',
         reviewType: 'ANNUAL',
         reviewPeriodStart: '',
@@ -492,20 +540,47 @@ export function Performance({ currentUser }) {
     setFormError(null);
   };
 
+  // FIXED: Handle modal open with proper form pre-population
+  const handleOpenGoalModal = () => {
+    setGoalFormData({
+      employeeId: selectedEmployeeId, // Pre-populate with selected employee
+      goalTitle: '',
+      goalDescription: '',
+      priority: 'MEDIUM',
+      targetDate: ''
+    });
+    setShowGoalModal(true);
+  };
+
+  const handleOpenReviewModal = () => {
+    setReviewFormData({
+      employeeId: selectedEmployeeId, // Pre-populate with selected employee
+      reviewerId: '',
+      reviewType: 'ANNUAL',
+      reviewPeriodStart: '',
+      reviewPeriodEnd: '',
+      overallRating: '',
+      strengths: '',
+      areasForImprovement: '',
+      comments: ''
+    });
+    setShowReviewModal(true);
+  };
+
   return (
     <PerformanceContainer>
       <PageHeader>
         <PageTitle>Performance Management</PageTitle>
         <div style={{ display: 'flex', gap: '12px' }}>
           <Button 
-            onClick={() => setShowGoalModal(true)}
+            onClick={handleOpenGoalModal} // FIXED: Use new handler
             disabled={!selectedEmployeeId}
           >
             Add Goal
           </Button>
           <Button 
             variant="secondary" 
-            onClick={() => setShowReviewModal(true)}
+            onClick={handleOpenReviewModal} // FIXED: Use new handler
             disabled={!selectedEmployeeId}
           >
             Add Review
@@ -515,7 +590,7 @@ export function Performance({ currentUser }) {
 
       {success && <SuccessMessage>{success}</SuccessMessage>}
 
-      {/* NEW: Employee Selector */}
+      {/* Employee Selector */}
       <EmployeeSelector>
         <SelectorLabel>View performance for:</SelectorLabel>
         <EmployeeSelect
@@ -538,6 +613,8 @@ export function Performance({ currentUser }) {
             fontStyle: 'italic'
           }}>
             Showing data for: <strong>{getSelectedEmployeeName()}</strong>
+            <br />
+            <small>Selected ID: {selectedEmployeeId}</small>
           </div>
         )}
       </EmployeeSelector>
@@ -716,7 +793,7 @@ export function Performance({ currentUser }) {
         </EmptyState>
       )}
 
-      {/* Goal Modal - Pre-fill with selected employee */}
+      {/* Goal Modal - FIXED: Pre-filled with selected employee */}
       {showGoalModal && (
         <Modal onClose={() => handleModalClose('goal')}>
           <ModalContent>
@@ -732,7 +809,7 @@ export function Performance({ currentUser }) {
                     <label style={{ color: '#222e3a', fontWeight: '500', marginBottom: '8px' }}>Employee *</label>
                     <select
                       name="employeeId"
-                      value={goalFormData.employeeId || selectedEmployeeId}
+                      value={goalFormData.employeeId}
                       onChange={handleGoalChange}
                       required
                       disabled={submitting}
@@ -751,6 +828,10 @@ export function Performance({ currentUser }) {
                         </option>
                       ))}
                     </select>
+                    {/* FIXED: Debug info */}
+                    <small style={{ color: '#6c757d', marginTop: '4px' }}>
+                      Selected: {goalFormData.employeeId || 'None'}
+                    </small>
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -853,7 +934,7 @@ export function Performance({ currentUser }) {
         </Modal>
       )}
 
-      {/* Similar updates for Review Modal - pre-fill with selected employee */}
+      {/* Review Modal - Similar fixes applied */}
       {showReviewModal && (
         <Modal onClose={() => handleModalClose('review')}>
           <ModalContent>
@@ -869,7 +950,7 @@ export function Performance({ currentUser }) {
                     <label style={{ color: '#222e3a', fontWeight: '500', marginBottom: '8px' }}>Employee *</label>
                     <select
                       name="employeeId"
-                      value={reviewFormData.employeeId || selectedEmployeeId}
+                      value={reviewFormData.employeeId}
                       onChange={handleReviewChange}
                       required
                       disabled={submitting}
@@ -888,6 +969,10 @@ export function Performance({ currentUser }) {
                         </option>
                       ))}
                     </select>
+                    {/* FIXED: Debug info */}
+                    <small style={{ color: '#6c757d', marginTop: '4px' }}>
+                      Selected: {reviewFormData.employeeId || 'None'}
+                    </small>
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -916,7 +1001,6 @@ export function Performance({ currentUser }) {
                   </div>
                 </div>
 
-                {/* Rest of review form fields... */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <label style={{ color: '#222e3a', fontWeight: '500', marginBottom: '8px' }}>Review Type</label>
