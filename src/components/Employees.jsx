@@ -405,7 +405,7 @@ export function Employees() {
         employee.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         employee.department?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         employee.position?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        employee.employeeId?.toLowerCase().includes(searchTerm.toLowerCase())
+        employee.id?.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredEmployees(filtered);
     }
@@ -621,7 +621,7 @@ export function Employees() {
                 <tbody>
                   {filteredEmployees.map(employee => (
                     <TableRow key={employee.id}>
-                      <TableCell>{employee.employeeId}</TableCell>
+                      <TableCell>{employee.id}</TableCell>
                       <TableCell>{employee.firstName} {employee.lastName}</TableCell>
                       <TableCell title={employee.email}>{employee.email}</TableCell>
                       <TableCell>{employee.phone || 'N/A'}</TableCell>
@@ -640,7 +640,7 @@ export function Employees() {
                           <Button 
                             size="small" 
                             variant="danger"
-                            onClick={() => handleDeleteEmployee(employee.employeeId)}
+                            onClick={() => handleDeleteEmployee(employee.id)}
                           >
                             Delete
                           </Button>

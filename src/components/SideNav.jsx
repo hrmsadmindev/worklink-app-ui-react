@@ -1,4 +1,4 @@
-// Updated SideNav.jsx - Add attendance to navigation
+// Updated SideNav.jsx - Add leave to navigation
 import React from 'react';
 import styled from 'styled-components';
 
@@ -51,7 +51,8 @@ export function SideNav({ pages, currentPage, onNavigate, currentUser }) {
  const roleBasedPages = {
  'ADMIN': pages,
  'MANAGER': pages.filter(page => page !== 'admin'),
- 'EMPLOYEE': pages.filter(page => !['admin', 'employees', 'recruitment'].includes(page))
+ 'EMPLOYEE': pages.filter(page => !['admin', 'employees', 'recruitment'].includes(page)),
+ 'HR': pages.filter(page => page !== 'admin') // HR can see most pages but not admin
  };
  
  return roleBasedPages[currentUser?.role] || ['dashboard'];
@@ -63,7 +64,8 @@ export function SideNav({ pages, currentPage, onNavigate, currentUser }) {
  const labels = {
  dashboard: 'Dashboard',
  employees: 'Employees',
- attendance: 'Attendance', // Add this line
+ attendance: 'Attendance',
+ leave: 'Leave Management', // Add leave label
  recruitment: 'Recruitment',
  performance: 'Performance',
  payroll: 'Payroll',

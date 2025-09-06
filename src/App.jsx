@@ -1,4 +1,4 @@
-// Updated App.jsx - Add attendance module
+// Updated App.jsx - Add leave module to the application
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Header } from './components/Header';
@@ -8,7 +8,8 @@ import { Employees } from './components/Employees';
 import { Recruitment } from './components/Recruitment';
 import { Performance } from './components/Performance';
 import { Payroll } from './components/Payroll';
-import { Attendance } from './components/Attendance'; // Add this import
+import { Attendance } from './components/Attendance';
+import { Leave } from './components/Leave'; // Add leave import
 import { Admin } from './components/Admin';
 import { LoginForm } from './components/LoginForm';
 import { authService } from './services/auth';
@@ -42,8 +43,8 @@ const initialPayroll = [
  { id: 5, employee: 'David Brown', department: 'Finance', grossPay: 7200, deductions: 1080, netPay: 6120, status: 'pending' }
 ];
 
-// Add 'attendance' to the PAGES array
-const PAGES = ['dashboard', 'employees', 'attendance', 'recruitment', 'performance', 'payroll', 'admin'];
+// Add 'leave' to the PAGES array
+const PAGES = ['dashboard', 'employees', 'attendance', 'leave', 'recruitment', 'performance', 'payroll', 'admin'];
 
 // Styled Components
 const AppLayout = styled.div`
@@ -264,7 +265,9 @@ function App() {
  case 'employees':
  return <Employees />; // No props needed - component manages its own data
  case 'attendance':
- return <Attendance currentUser={currentUser} />; // Add this case
+ return <Attendance currentUser={currentUser} />;
+ case 'leave':
+ return <Leave currentUser={currentUser} />; // Add leave case
  case 'recruitment':
  return <Recruitment {...pageProps} />;
  case 'performance':

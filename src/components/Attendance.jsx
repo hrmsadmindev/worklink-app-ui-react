@@ -224,7 +224,7 @@ export function Attendance({ currentUser }) {
  }
 
  // For employees, load their own attendance data
- const employeeId = currentUser?.employeeId;
+ const employeeId = currentUser?.id;
  if (!employeeId) {
  setError('Employee ID not found');
  setLoading(false);
@@ -294,7 +294,7 @@ export function Attendance({ currentUser }) {
  };
 
  const handleClockIn = async () => {
- const employeeId = currentUser?.employeeId;
+ const employeeId = currentUser?.id;
  if (!employeeId) {
  setError('Employee ID not found');
  return;
@@ -321,7 +321,7 @@ export function Attendance({ currentUser }) {
  };
 
  const handleClockOut = async () => {
- const employeeId = currentUser?.employeeId;
+ const employeeId = currentUser?.id;
  if (!employeeId) {
  setError('Employee ID not found');
  return;
@@ -353,9 +353,9 @@ export function Attendance({ currentUser }) {
  
  try {
  await Promise.all([
- loadTodayAttendance(employee.employeeId),
- loadAttendanceRecords(employee.employeeId),
- loadMonthlySummary(employee.employeeId)
+ loadTodayAttendance(employee.id),
+ loadAttendanceRecords(employee.id),
+ loadMonthlySummary(employee.id)
  ]);
  } catch (error) {
  setError('Failed to load employee attendance data');
@@ -415,9 +415,9 @@ export function Attendance({ currentUser }) {
  </CardHeader>
  <CardContent>
  <select 
- value={selectedEmployee?.employeeId || ''} 
+ value={selectedEmployee?.id || ''} 
  onChange={(e) => {
- const employee = employees.find(emp => emp.employeeId === parseInt(e.target.value));
+ const employee = employees.find(emp => emp.id === parseInt(e.target.value));
  if (employee) handleEmployeeSelect(employee);
  }}
  style={{
@@ -432,7 +432,7 @@ export function Attendance({ currentUser }) {
  >
  <option value="">Select an employee...</option>
  {employees.map(employee => (
- <option key={employee.employeeId} value={employee.employeeId}>
+ <option key={employee.id} value={employee.id}>
  {employee.firstName} {employee.lastName} - {employee.department}
  </option>
  ))}
@@ -546,8 +546,8 @@ export function Attendance({ currentUser }) {
  <Button
  onClick={() => {
  const employeeId = currentUser?.role === 'ADMIN' 
- ? selectedEmployee?.employeeId 
- : currentUser?.employeeId;
+ ? selectedEmployee?.id 
+ : currentUser?.id;
  if (employeeId) loadAttendanceRecords(employeeId);
  }}
  >
