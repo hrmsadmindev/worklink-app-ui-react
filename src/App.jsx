@@ -1,4 +1,4 @@
-// App.jsx - Updated with API Integration
+// Updated App.jsx - Add attendance module
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Header } from './components/Header';
@@ -8,6 +8,7 @@ import { Employees } from './components/Employees';
 import { Recruitment } from './components/Recruitment';
 import { Performance } from './components/Performance';
 import { Payroll } from './components/Payroll';
+import { Attendance } from './components/Attendance'; // Add this import
 import { Admin } from './components/Admin';
 import { LoginForm } from './components/LoginForm';
 import { authService } from './services/auth';
@@ -41,7 +42,8 @@ const initialPayroll = [
  { id: 5, employee: 'David Brown', department: 'Finance', grossPay: 7200, deductions: 1080, netPay: 6120, status: 'pending' }
 ];
 
-const PAGES = ['dashboard', 'employees', 'recruitment', 'performance', 'payroll', 'admin'];
+// Add 'attendance' to the PAGES array
+const PAGES = ['dashboard', 'employees', 'attendance', 'recruitment', 'performance', 'payroll', 'admin'];
 
 // Styled Components
 const AppLayout = styled.div`
@@ -107,213 +109,214 @@ function App() {
 
  // Load employees for dashboard statistics
  useEffect(() => {
-   const loadEmployeesForDashboard = async () => {
-     if (currentUser && currentUser.email) {
-       try {
-         console.log('[App] Loading employees for dashboard...');
-         const result = await employeeService.getAllEmployees();
+ const loadEmployeesForDashboard = async () => {
+ if (currentUser && currentUser.email) {
+ try {
+ console.log('[App] Loading employees for dashboard...');
+ const result = await employeeService.getAllEmployees();
 
-         if (result.success) {
-           console.log('[App] Employees loaded for dashboard:', result.data);
-           setEmployees(result.data || []);
-         } else {
-           console.error('[App] Failed to load employees for dashboard:', result.error);
-           setEmployeesError(result.error);
-         }
-       } catch (error) {
-         console.error('[App] Error loading employees for dashboard:', error);
-         setEmployeesError('Failed to load employee data');
-       } finally {
-         setEmployeesLoading(false);
-       }
-     }
-   };
+ if (result.success) {
+ console.log('[App] Employees loaded for dashboard:', result.data);
+ setEmployees(result.data || []);
+ } else {
+ console.error('[App] Failed to load employees for dashboard:', result.error);
+ setEmployeesError(result.error);
+ }
+ } catch (error) {
+ console.error('[App] Error loading employees for dashboard:', error);
+ setEmployeesError('Failed to load employee data');
+ } finally {
+ setEmployeesLoading(false);
+ }
+ }
+ };
 
-   loadEmployeesForDashboard();
+ loadEmployeesForDashboard();
  }, [currentUser]);
 
  // Check for existing authentication on app load
  useEffect(() => {
-   const checkAuth = async () => {
-     console.log('[App] Checking authentication...');
+ const checkAuth = async () => {
+ console.log('[App] Checking authentication...');
 
-     try {
-       const token = localStorage.getItem('accessToken');
-       const user = authService.getCurrentUser();
+ try {
+ const token = localStorage.getItem('accessToken');
+ const user = authService.getCurrentUser();
 
-       console.log('[App] Token exists:', !!token);
-       console.log('[App] User from localStorage:', user);
+ console.log('[App] Token exists:', !!token);
+ console.log('[App] User from localStorage:', user);
 
-       // If we have token but no valid user, clear everything and show login
-       if (token && !user) {
-         console.log('[App] Found token but no valid user - clearing corrupted data');
-         localStorage.removeItem('accessToken');
-         localStorage.removeItem('refreshToken');
-         localStorage.removeItem('user');
-         return;
-       }
+ // If we have token but no valid user, clear everything and show login
+ if (token && !user) {
+ console.log('[App] Found token but no valid user - clearing corrupted data');
+ localStorage.removeItem('accessToken');
+ localStorage.removeItem('refreshToken');
+ localStorage.removeItem('user');
+ return;
+ }
 
-       // If we have both token and valid user, session is valid
-       if (token && user && user.email) {
-         console.log('[App] Valid session found, user:', user);
-       } else {
-         console.log('[App] No valid session found');
-       }
+ // If we have both token and valid user, session is valid
+ if (token && user && user.email) {
+ console.log('[App] Valid session found, user:', user);
+ } else {
+ console.log('[App] No valid session found');
+ }
 
-     } catch (error) {
-       console.error('[App] Error during auth check:', error);
-       // Clear any corrupted data
-       localStorage.clear();
-     }
-   };
+ } catch (error) {
+ console.error('[App] Error during auth check:', error);
+ // Clear any corrupted data
+ localStorage.clear();
+ }
+ };
 
-   checkAuth();
+ checkAuth();
  }, []);
 
  // Authentication handlers
  const handleLogin = async (credentials) => {
-   console.log('[App] Login handler called with:', credentials);
+ console.log('[App] Login handler called with:', credentials);
 
-   try {
-     const result = await login(credentials);
-     console.log('[App] Login result:', result);
+ try {
+ const result = await login(credentials);
+ console.log('[App] Login result:', result);
 
-     if (result.success && result.user) {
-       console.log('[App] Login successful, setting user:', result.user);
-       setCurrentPage('dashboard');
-     } else {
-       console.log('[App] Login failed:', result.error);
-     }
-   } catch (error) {
-     console.error('[App] Login error:', error);
-   }
+ if (result.success && result.user) {
+ console.log('[App] Login successful, setting user:', result.user);
+ setCurrentPage('dashboard');
+ } else {
+ console.log('[App] Login failed:', result.error);
+ }
+ } catch (error) {
+ console.error('[App] Login error:', error);
+ }
  };
 
  const handleLogout = async () => {
-   console.log('[App] Logout initiated');
+ console.log('[App] Logout initiated');
 
-   try {
-     await logout();
-     setCurrentPage('dashboard');
-     // Clear employee data on logout
-     setEmployees([]);
-     setEmployeesLoading(true);
-     setEmployeesError(null);
-   } catch (error) {
-     console.error('[App] Logout error:', error);
-   }
+ try {
+ await logout();
+ setCurrentPage('dashboard');
+ // Clear employee data on logout
+ setEmployees([]);
+ setEmployeesLoading(true);
+ setEmployeesError(null);
+ } catch (error) {
+ console.error('[App] Logout error:', error);
+ }
  };
 
  // Navigation handler
  const navigateToPage = (page) => {
-   setCurrentPage(page);
+ setCurrentPage(page);
  };
 
  // Data handlers for other modules (keep these until you integrate their APIs)
  const addJob = (jobData) => {
-   const newJob = {
-     id: jobs.length + 1,
-     ...jobData,
-     applicants: 0,
-     status: 'active'
-   };
-   setJobs([...jobs, newJob]);
+ const newJob = {
+ id: jobs.length + 1,
+ ...jobData,
+ applicants: 0,
+ status: 'active'
+ };
+ setJobs([...jobs, newJob]);
  };
 
  const addReview = (reviewData) => {
-   const newReview = {
-     id: reviews.length + 1,
-     ...reviewData,
-     rating: 0,
-     status: 'pending',
-     date: null
-   };
-   setReviews([...reviews, newReview]);
+ const newReview = {
+ id: reviews.length + 1,
+ ...reviewData,
+ rating: 0,
+ status: 'pending',
+ date: null
+ };
+ setReviews([...reviews, newReview]);
  };
 
  const runPayroll = () => {
-   const updatedPayroll = payrollData.map(item => ({
-     ...item,
-     status: 'processed'
-   }));
-   setPayrollData(updatedPayroll);
+ const updatedPayroll = payrollData.map(item => ({
+ ...item,
+ status: 'processed'
+ }));
+ setPayrollData(updatedPayroll);
  };
 
  // Render current page
  const renderCurrentPage = () => {
-   const pageProps = {
-     employees,
-    jobs,
-    goals,
-    reviews,
-    payrollData,
-    currentUser,
-    onAddJob: addJob,
-    onAddReview: addReview,
-    onRunPayroll: runPayroll,
-    employeesLoading,
-    employeesError,
-    onNavigate: navigateToPage
-   };
+ const pageProps = {
+ employees,
+ jobs,
+ goals,
+ reviews,
+ payrollData,
+ currentUser,
+ onAddJob: addJob,
+ onAddReview: addReview,
+ onRunPayroll: runPayroll,
+ employeesLoading,
+ employeesError,
+ onNavigate: navigateToPage
+ };
 
-   switch (currentPage) {
-     case 'dashboard':
-       return <Dashboard {...pageProps} />;
-     case 'employees':
-       return <Employees />; // No props needed - component manages its own data
-     case 'recruitment':
-       return <Recruitment {...pageProps} />;
-     case 'performance':
-       return <Performance {...pageProps} />;
-     case 'payroll':
-       return <Payroll {...pageProps} />;
-     case 'admin':
-       return <Admin {...pageProps} />;
-     default:
-       return <Dashboard {...pageProps} />;
-   }
+ switch (currentPage) {
+ case 'dashboard':
+ return <Dashboard {...pageProps} />;
+ case 'employees':
+ return <Employees />; // No props needed - component manages its own data
+ case 'attendance':
+ return <Attendance currentUser={currentUser} />; // Add this case
+ case 'recruitment':
+ return <Recruitment {...pageProps} />;
+ case 'performance':
+ return <Performance {...pageProps} />;
+ case 'payroll':
+ return <Payroll {...pageProps} />;
+ case 'admin':
+ return <Admin {...pageProps} />;
+ default:
+ return <Dashboard {...pageProps} />;
+ }
  };
 
  // Show loading screen while checking authentication
  if (loading) {
-   return (
-     <LoadingScreen>
-       Loading...
-     </LoadingScreen>
-   );
+ return (
+ <LoadingScreen>
+ Loading...
+ </LoadingScreen>
+ );
  }
 
  // If not logged in, show login form
  if (!currentUser || !currentUser.email) {
-   console.log('[App] Showing login form - currentUser:', currentUser);
-   return (
-     <div>
-       <LoginForm onLogin={handleLogin} />
-       {error && <ErrorMessage>{error}</ErrorMessage>}
-     </div>
-   );
+ console.log('[App] Showing login form - currentUser:', currentUser);
+ return (
+ <AppLayout>
+ <MainContent>
+ {error && <ErrorMessage>{error}</ErrorMessage>}
+ <LoginForm onLogin={handleLogin} />
+ </MainContent>
+ </AppLayout>
+ );
  }
 
  // Main app layout
  console.log('[App] Rendering main app for user:', currentUser);
  return (
-   <AppLayout>
-      <SideNav
-        pages={PAGES}
-        currentPage={currentPage}
-        onNavigate={navigateToPage}
-        currentUser={currentUser} // Pass full user object: { email, role }
-      />
-      <MainContent>
-        <Header
-          currentUser={currentUser} // Pass full user object: { email, role }
-          onLogout={handleLogout}
-        />
-        <ContentArea>
-          {renderCurrentPage()}
-        </ContentArea>
-      </MainContent>
-    </AppLayout>
+ <AppLayout>
+ <SideNav 
+ pages={PAGES} 
+ currentPage={currentPage} 
+ onNavigate={navigateToPage}
+ currentUser={currentUser}
+ />
+ <MainContent>
+ <Header currentUser={currentUser} onLogout={handleLogout} />
+ <ContentArea>
+ {renderCurrentPage()}
+ </ContentArea>
+ </MainContent>
+ </AppLayout>
  );
 }
 
