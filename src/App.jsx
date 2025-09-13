@@ -5,7 +5,7 @@ import { Header } from './components/Header';
 import { SideNav } from './components/SideNav';
 import { Dashboard } from './components/Dashboard';
 import { Employees } from './components/Employees';
-import { Recruitment } from './components/Recruitment';
+// import { Recruitment } from './components/Recruitment';
 import { Performance } from './components/Performance';
 import { Payroll } from './components/Payroll';
 import { Attendance } from './components/Attendance';
@@ -44,7 +44,9 @@ const initialPayroll = [
 ];
 
 // Add 'leave' to the PAGES array
-const PAGES = ['dashboard', 'employees', 'attendance', 'leave', 'recruitment', 'performance', 'payroll', 'admin'];
+
+//deleted recruitment page from here
+const PAGES = ['dashboard', 'employees', 'attendance', 'leave', 'performance', 'payroll', 'admin'];
 
 // Styled Components
 const AppLayout = styled.div`
@@ -268,8 +270,8 @@ function App() {
  return <Attendance currentUser={currentUser} />;
  case 'leave':
  return <Leave currentUser={currentUser} />; // Add leave case
- case 'recruitment':
- return <Recruitment {...pageProps} />;
+//  case 'recruitment':
+//  return <Recruitment {...pageProps} />;
  case 'performance':
  return <Performance {...pageProps} />;
  case 'payroll':
