@@ -246,7 +246,7 @@ export function Performance({ currentUser }) {
 
           if (currentEmployee) {
             console.log('[Performance] Auto-selecting current user:', currentEmployee);
-            setSelectedEmployeeId(currentEmployee.employeeId.toString());
+            setSelectedEmployeeId(currentEmployee.id.toString());
           } else if (currentUser.role === 'ADMIN' || currentUser.role === 'MANAGER') {
             // For admin/manager, default to first employee
             console.log('[Performance] Auto-selecting first employee for admin/manager');
@@ -600,7 +600,7 @@ export function Performance({ currentUser }) {
         >
           <option value="">Select an employee</option>
           {employees.map(employee => (
-            <option key={employee.employeeId} value={employee.employeeId}>
+            <option key={employee.id} value={employee.id}>
               {employee.firstName} {employee.lastName}
               {employee.email === currentUser?.email && ' (You)'}
             </option>
@@ -823,7 +823,7 @@ export function Performance({ currentUser }) {
                     >
                       <option value="">Select Employee</option>
                       {employees.map(employee => (
-                        <option key={employee.employeeId} value={employee.employeeId}>
+                        <option key={employee.id} value={employee.id}>
                           {employee.firstName} {employee.lastName}
                         </option>
                       ))}
@@ -964,7 +964,7 @@ export function Performance({ currentUser }) {
                     >
                       <option value="">Select Employee</option>
                       {employees.map(employee => (
-                        <option key={employee.employeeId} value={employee.employeeId}>
+                        <option key={employee.id} value={employee.id}>
                           {employee.firstName} {employee.lastName}
                         </option>
                       ))}
@@ -993,7 +993,7 @@ export function Performance({ currentUser }) {
                     >
                       <option value="">Select Reviewer</option>
                       {employees.map(employee => (
-                        <option key={employee.employeeId} value={employee.employeeId}>
+                        <option key={employee.id} value={employee.id}>
                           {employee.firstName} {employee.lastName}
                         </option>
                       ))}

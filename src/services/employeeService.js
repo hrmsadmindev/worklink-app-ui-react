@@ -65,7 +65,7 @@ export const employeeService = {
         email: employeeData.email,
         phone: employeeData.phone || '',
         address: employeeData.address || '',
-        department: employeeData.department,
+        departmentId: employeeData.departmentId,
         position: employeeData.position,
         dateOfJoining: employeeData.dateOfJoining || new Date().toISOString().split('T')[0],
         salary: employeeData.salary || 0,
