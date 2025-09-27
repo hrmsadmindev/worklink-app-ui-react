@@ -552,7 +552,7 @@ export function Leave({ currentUser }) {
               <option value="">Select an employee...</option>
               {employees.map(employee => (
                 <option key={employee.id} value={employee.id}>
-                  {employee.firstName} {employee.lastName} - {employee.department}
+                  {employee.firstName} {employee.lastName} - {employee.departmentName}
                 </option>
               ))}
             </Select>

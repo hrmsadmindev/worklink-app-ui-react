@@ -5,11 +5,12 @@ export const authService = {
     try {
       const response = await api.post('/auth/login', {
         email: credentials.email,
-        password: credentials.password
+        password: credentials.password,
+        employeeId: credentials.employeeId
       });
       
       // Extract from nested data
-      const { accessToken, email, role } = response.data.data;
+      const { accessToken, email, role, employeeId } = response.data.data;
       
       // Store token
       localStorage.setItem('accessToken', accessToken);
@@ -17,7 +18,8 @@ export const authService = {
       // Create user object from separate email and role
       const user = { 
         email: email, 
-        role: role 
+        role: role,
+        employeeId: employeeId
       };
       
       // Store user object (not just email)
@@ -44,9 +46,6 @@ export const authService = {
   isAuthenticated() {
   const token = localStorage.getItem('accessToken');
   const user = this.getCurrentUser(); // This should return a valid user object
-  
-  console.log('[authService] Token exists:', !!token);
-  console.log('[authService] User exists:', !!user);
   
   // Only consider authenticated if BOTH token and user exist
   return !!(token && user);

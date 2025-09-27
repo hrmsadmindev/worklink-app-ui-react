@@ -224,7 +224,7 @@ export function Attendance({ currentUser }) {
  }
 
  // For employees, load their own attendance data
- const employeeId = currentUser?.id;
+ const employeeId = currentUser?.employeeId;
  if (!employeeId) {
  setError('Employee ID not found');
  setLoading(false);
@@ -269,7 +269,7 @@ export function Attendance({ currentUser }) {
  const loadAttendanceRecords = async (employeeId) => {
  try {
  const result = await attendanceService.getEmployeeAttendance(
- employeeId, 0, 10, 'date', 'desc', startDate, endDate
+ employeeId, startDate, endDate
  );
  if (result.success) {
  setAttendanceRecords(result.data?.content || []);
@@ -294,7 +294,7 @@ export function Attendance({ currentUser }) {
  };
 
  const handleClockIn = async () => {
- const employeeId = currentUser?.id;
+ const employeeId = currentUser?.employeeId;
  if (!employeeId) {
  setError('Employee ID not found');
  return;
@@ -321,7 +321,7 @@ export function Attendance({ currentUser }) {
  };
 
  const handleClockOut = async () => {
- const employeeId = currentUser?.id;
+ const employeeId = currentUser?.employeeId;
  if (!employeeId) {
  setError('Employee ID not found');
  return;
@@ -433,7 +433,7 @@ export function Attendance({ currentUser }) {
  <option value="">Select an employee...</option>
  {employees.map(employee => (
  <option key={employee.id} value={employee.id}>
- {employee.firstName} {employee.lastName} - {employee.department}
+ {employee.firstName} {employee.lastName} - {employee.departmentName}
  </option>
  ))}
  </select>
