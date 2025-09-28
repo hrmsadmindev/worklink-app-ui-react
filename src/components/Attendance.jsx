@@ -546,8 +546,8 @@ export function Attendance({ currentUser }) {
  <Button
  onClick={() => {
  const employeeId = currentUser?.role === 'ADMIN' 
- ? selectedEmployee?.id 
- : currentUser?.id;
+ ? selectedEmployee?.employeeId 
+ : currentUser?.employeeId;
  if (employeeId) loadAttendanceRecords(employeeId);
  }}
  >

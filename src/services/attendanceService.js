@@ -183,7 +183,7 @@ export const attendanceService = {
     // Get current day attendance status (UPDATED - no pagination)
     async getCurrentDayAttendance(employeeId) {
         try {
-            const today = new Date().toISOString().split('T')[0];
+            const today = new Date().toLocaleDateString('sv-SE');
             const response = await this.getEmployeeAttendance(employeeId, today, today);
 
             if (response.success && response.data && response.data.length > 0) {
