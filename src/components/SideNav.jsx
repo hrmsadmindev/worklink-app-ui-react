@@ -1,6 +1,7 @@
-// Updated SideNav.jsx - Add leave to navigation
+// Updated SideNav.jsx - Role-based navigation using RolesContext
 import React from 'react';
 import styled from 'styled-components';
+import { useRoles } from '../context/RolesContext';
 
 const Sidebar = styled.nav`
  background: ${({ theme }) => theme.colors.secondary};
@@ -25,6 +26,9 @@ const NavButton = styled.button`
  cursor: pointer;
  transition: all 0.2s ease;
  font-weight: ${({ active }) => (active ? '600' : '400')};
+ display: flex;
+ align-items: center;
+ gap: ${({ theme }) => theme.spacing.sm};
 
  &:hover {
  background: ${({ theme }) => theme.colors.primaryHover};
@@ -37,6 +41,10 @@ const NavButton = styled.button`
  }
 `;
 
+const NavIcon = styled.i`
+ font-size: ${({ theme }) => theme.fontSize.lg};
+`;
+
 const NavTitle = styled.h3`
  color: ${({ theme }) => theme.colors.textPrimary};
  margin: 0 0 ${({ theme }) => theme.spacing.lg} 0;
@@ -46,27 +54,16 @@ const NavTitle = styled.h3`
 `;
 
 export function SideNav({ pages, currentPage, onNavigate, currentUser }) {
- // Filter pages based on user role
- const getVisiblePages = () => {
- const roleBasedPages = {
- 'ADMIN': pages,
- 'MANAGER': pages.filter(page => page !== 'admin'),
- 'EMPLOYEE': pages.filter(page => !['admin', 'employees', 'recruitment'].includes(page)),
- 'HR': pages.filter(page => page !== 'admin') // HR can see most pages but not admin
- };
- 
- return roleBasedPages[currentUser?.role] || ['dashboard'];
- };
+ const { getNavigationItems } = useRoles();
 
- const visiblePages = getVisiblePages();
+ const navigationItems = getNavigationItems();
 
  const getPageLabel = (page) => {
  const labels = {
  dashboard: 'Dashboard',
  employees: 'Employees',
  attendance: 'Attendance',
- leave: 'Leave Management', // Add leave label
- recruitment: 'Recruitment',
+ leave: 'Leave Management',
  performance: 'Performance',
  payroll: 'Payroll',
  admin: 'Administration'
@@ -77,16 +74,17 @@ export function SideNav({ pages, currentPage, onNavigate, currentUser }) {
  return (
  <Sidebar>
  <NavTitle>Navigation</NavTitle>
- {visiblePages.map(page => (
+ {navigationItems.map(item => (
  <NavButton
- key={page}
- active={currentPage === page}
- onClick={() => onNavigate(page)}
+ key={item.key}
+ active={currentPage === item.key}
+ onClick={() => onNavigate(item.key)}
  >
- {getPageLabel(page)}
+ <NavIcon className={item.icon} />
+ {item.label}
  </NavButton>
  ))}
  </Sidebar>
-);
+ );
 
 }

@@ -1,11 +1,11 @@
-// components/Employees.jsx - With Horizontal Scrollable Table and Modal Error Handling
+// components/Employees.jsx - WITH COMPLETE EDIT FUNCTIONALITY
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Card, { CardTitle } from './Card';
 import Button from './Button';
 import { Modal, ModalContent, ModalHeader, ModalBody } from './Modal';
 import { employeeService } from '../services/employeeService';
-import { departmentService } from '../services/departmentService'; // ADD: Import department service
+import { departmentService } from '../services/departmentService';
 
 const EmployeesContainer = styled.div`
   max-width: 1200px;
@@ -17,7 +17,6 @@ const PageHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: ${({ theme }) => theme.spacing.lg};
-
   @media (max-width: 768px) {
     flex-direction: column;
     gap: ${({ theme }) => theme.spacing.md};
@@ -30,7 +29,6 @@ const PageTitle = styled.h2`
   margin: 0;
   font-size: ${({ theme }) => theme.fontSize.xxxl};
   font-family: ${({ theme }) => theme.typography.fonts.primary};
-
   @media (max-width: 768px) {
     font-size: ${({ theme }) => theme.fontSize.xxl};
     font-family: ${({ theme }) => theme.typography.fonts.primary};
@@ -43,7 +41,6 @@ const SearchContainer = styled.div`
   gap: ${({ theme }) => theme.spacing.md};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   align-items: center;
-
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: stretch;
@@ -60,13 +57,11 @@ const SearchInput = styled.input`
   background: ${({ theme }) => theme.colors.white};
   min-width: 300px;
   transition: border-color 0.2s ease;
-
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};
     box-shadow: 0 0 0 2px rgba(24, 102, 215, 0.2);
   }
-
   @media (max-width: 768px) {
     min-width: 100%;
   }
@@ -75,47 +70,38 @@ const SearchInput = styled.input`
 const SearchButtonGroup = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.spacing.sm};
-
   @media (max-width: 768px) {
     justify-content: center;
   }
 `;
 
-// Table container with horizontal scroll
 const TableContainer = styled.div`
   width: 100%;
   overflow-x: auto;
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   box-shadow: ${({ theme }) => theme.shadows.sm};
   background: ${({ theme }) => theme.colors.white};
-
-  /* Custom scrollbar styling */
   &::-webkit-scrollbar {
     height: 8px;
   }
-
   &::-webkit-scrollbar-track {
     background: ${({ theme }) => theme.colors.light};
     border-radius: ${({ theme }) => theme.borderRadius.sm};
   }
-
   &::-webkit-scrollbar-thumb {
     background: ${({ theme }) => theme.colors.border};
     border-radius: ${({ theme }) => theme.borderRadius.sm};
   }
-
   &::-webkit-scrollbar-thumb:hover {
     background: ${({ theme }) => theme.colors.textSecondary};
   }
-
-  /* For Firefox */
   scrollbar-width: thin;
   scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.light};
 `;
 
 const Table = styled.table`
   width: 100%;
-  min-width: 1000px; /* Minimum width to ensure all columns are visible */
+  min-width: 1000px;
   border-collapse: collapse;
   background: ${({ theme }) => theme.colors.white};
 `;
@@ -131,7 +117,6 @@ const TableRow = styled.tr`
   &:not(:last-child) {
     border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   }
-
   &:hover {
     background: rgba(24, 102, 215, 0.05);
   }
@@ -146,30 +131,28 @@ const TableHeaderCell = styled.th`
   font-family: ${({ theme }) => theme.typography.fonts.primary};
   white-space: nowrap;
   min-width: ${({ minWidth }) => minWidth || 'auto'};
-
-  /* Specific column widths */
-  &:nth-child(1) { /* Employee ID */
+  &:nth-child(1) {
     min-width: 120px;
   }
-  &:nth-child(2) { /* Name */
+  &:nth-child(2) {
     min-width: 180px;
   }
-  &:nth-child(3) { /* Email */
+  &:nth-child(3) {
     min-width: 200px;
   }
-  &:nth-child(4) { /* Phone */
+  &:nth-child(4) {
     min-width: 130px;
   }
-  &:nth-child(5) { /* Department */
+  &:nth-child(5) {
     min-width: 130px;
   }
-  &:nth-child(6) { /* Position */
+  &:nth-child(6) {
     min-width: 150px;
   }
-  &:nth-child(7) { /* Status */
+  &:nth-child(7) {
     min-width: 100px;
   }
-  &:nth-child(8) { /* Actions */
+  &:nth-child(8) {
     min-width: 140px;
   }
 `;
@@ -183,13 +166,10 @@ const TableCell = styled.td`
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 200px;
-
-  /* Specific column styling */
-  &:nth-child(3) { /* Email column */
+  &:nth-child(3) {
     max-width: 250px;
   }
-
-  &:nth-child(8) { /* Actions column */
+  &:nth-child(8) {
     white-space: nowrap;
   }
 `;
@@ -202,7 +182,6 @@ const StatusBadge = styled.span`
   font-weight: 500;
   text-transform: uppercase;
   white-space: nowrap;
-
   ${({ status, theme }) => {
     switch (status?.toUpperCase()) {
       case 'ACTIVE':
@@ -245,7 +224,6 @@ const FormRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: ${({ theme }) => theme.spacing.md};
-
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
@@ -273,13 +251,11 @@ const Input = styled.input`
   color: ${({ theme }) => theme.colors.textPrimary};
   background: ${({ theme }) => theme.colors.white};
   transition: border-color 0.2s ease;
-
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};
     box-shadow: 0 0 0 2px rgba(24, 102, 215, 0.2);
   }
-
   &:disabled {
     background-color: ${({ theme }) => theme.colors.light};
     cursor: not-allowed;
@@ -295,13 +271,11 @@ const Select = styled.select`
   color: ${({ theme }) => theme.colors.textPrimary};
   background: ${({ theme }) => theme.colors.white};
   cursor: pointer;
-
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};
     box-shadow: 0 0 0 2px rgba(24, 102, 215, 0.2);
   }
-
   &:disabled {
     background-color: ${({ theme }) => theme.colors.light};
     cursor: not-allowed;
@@ -327,7 +301,6 @@ const ErrorMessage = styled.div`
   text-align: center;
 `;
 
-// NEW: Form error message for inside modal
 const FormErrorMessage = styled.div`
   background: ${({ theme }) => theme.colors.danger};
   color: white;
@@ -353,14 +326,12 @@ const EmptyState = styled.div`
   color: ${({ theme }) => theme.colors.textSecondary};
 `;
 
-// Scroll hint for mobile users
 const ScrollHint = styled.div`
   text-align: center;
   color: ${({ theme }) => theme.colors.textSecondary};
   font-size: ${({ theme }) => theme.fontSize.sm};
   font-family: ${({ theme }) => theme.typography.fonts.primary};
   margin-bottom: ${({ theme }) => theme.spacing.md};
-
   @media (min-width: 1200px) {
     display: none;
   }
@@ -370,18 +341,22 @@ export function Employees() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [formError, setFormError] = useState(null); // NEW: Separate form error state
+  const [formError, setFormError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredEmployees, setFilteredEmployees] = useState([]);
-
-  // ADD: Department-related state
+  
+  // Edit functionality state
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingEmployeeId, setEditingEmployeeId] = useState(null);
+  
+  // Department-related state
   const [departments, setDepartments] = useState([]);
   const [loadingDepartments, setLoadingDepartments] = useState(false);
-
-  // UPDATED: Form data with departmentId instead of department
+  
+  // Form data state
   const [formData, setFormData] = useState({
     employeeId: '',
     firstName: '',
@@ -389,7 +364,7 @@ export function Employees() {
     email: '',
     phone: '',
     address: '',
-    departmentId: '', // CHANGED: from 'department' to 'departmentId'
+    departmentId: '',
     position: '',
     dateOfJoining: '',
     salary: ''
@@ -400,7 +375,7 @@ export function Employees() {
     loadEmployees();
   }, []);
 
-  // ADD: Load departments when modal opens
+  // Load departments when modal opens
   useEffect(() => {
     if (showModal) {
       loadDepartments();
@@ -428,10 +403,8 @@ export function Employees() {
     try {
       setLoading(true);
       setError(null);
-
       console.log('[Employees] Loading employees...');
       const result = await employeeService.getAllEmployees();
-
       if (result.success) {
         console.log('[Employees] Loaded employees:', result.data);
         setEmployees(result.data || []);
@@ -447,13 +420,11 @@ export function Employees() {
     }
   };
 
-  // ADD: Function to load departments
   const loadDepartments = async () => {
     try {
       setLoadingDepartments(true);
       console.log('[Employees] Loading departments...');
       const result = await departmentService.getAllDepartments();
-
       if (result.success) {
         console.log('[Employees] Loaded departments:', result.data);
         setDepartments(result.data || []);
@@ -469,50 +440,104 @@ export function Employees() {
     }
   };
 
-  // UPDATED: handleSubmit function with departmentId
+  // Handle editing an employee
+  const handleEditEmployee = async (employeeId) => {
+    try {
+      console.log('[Employees] Loading employee for edit:', employeeId);
+      setFormError(null);
+      
+      // Load employee data
+      const result = await employeeService.getEmployeeById(employeeId);
+      if (result.success) {
+        const employee = result.data;
+        console.log('[Employees] Loaded employee data:', employee);
+        
+        // Pre-populate form with employee data
+        setFormData({
+          employeeId: employee.employeeId || '',
+          firstName: employee.firstName || '',
+          lastName: employee.lastName || '',
+          email: employee.email || '',
+          phone: employee.phone || '',
+          address: employee.address || '',
+          departmentId: employee.departmentId || '',
+          position: employee.position || '',
+          dateOfJoining: employee.dateOfJoining || '',
+          salary: employee.salary || ''
+        });
+        
+        // Set editing state
+        setIsEditing(true);
+        setEditingEmployeeId(employeeId);
+        setShowModal(true);
+      } else {
+        console.error('[Employees] Failed to load employee:', result.error);
+        setError('Failed to load employee data');
+      }
+    } catch (error) {
+      console.error('[Employees] Error loading employee:', error);
+      setError('Failed to load employee data');
+    }
+  };
+
+  // Reset form and modal state
+  const resetForm = () => {
+    setFormData({
+      employeeId: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      address: '',
+      departmentId: '',
+      position: '',
+      dateOfJoining: '',
+      salary: ''
+    });
+    setIsEditing(false);
+    setEditingEmployeeId(null);
+    setFormError(null);
+  };
+
+  // Handle form submission for both create and update
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       setSubmitting(true);
-      setFormError(null); // Clear form error instead of general error
+      setFormError(null);
       setSuccess(null);
-
-      console.log('[Employees] Submitting employee:', formData);
-      const result = await employeeService.createEmployee(formData);
-
+      
+      console.log('[Employees] Submitting employee:', formData, 'isEditing:', isEditing);
+      
+      let result;
+      if (isEditing) {
+        // Update existing employee
+        result = await employeeService.updateEmployee(editingEmployeeId, formData);
+      } else {
+        // Create new employee
+        result = await employeeService.createEmployee(formData);
+      }
+      
       if (result.success) {
-        console.log('[Employees] Employee created successfully:', result.data);
-        setSuccess('Employee added successfully!');
-
-        // UPDATED: Reset form with departmentId
-        setFormData({
-          employeeId: '',
-          firstName: '',
-          lastName: '',
-          email: '',
-          phone: '',
-          address: '',
-          departmentId: '', // CHANGED: from 'department' to 'departmentId'
-          position: '',
-          dateOfJoining: '',
-          salary: ''
-        });
-
+        const action = isEditing ? 'updated' : 'created';
+        console.log(`[Employees] Employee ${action} successfully:`, result.data);
+        setSuccess(`Employee ${action} successfully!`);
+        
+        resetForm();
         setShowModal(false);
-
+        
         // Reload employees list
         await loadEmployees();
-
+        
         // Clear success message after 3 seconds
         setTimeout(() => setSuccess(null), 3000);
       } else {
-        console.error('[Employees] Failed to create employee:', result.error);
-        setFormError(result.error); // Set form error instead of general error
+        console.error(`[Employees] Failed to ${isEditing ? 'update' : 'create'} employee:`, result.error);
+        setFormError(result.error);
       }
     } catch (error) {
-      console.error('[Employees] Error creating employee:', error);
-      setFormError('Failed to create employee'); // Set form error instead of general error
+      console.error(`[Employees] Error ${isEditing ? 'updating' : 'creating'} employee:`, error);
+      setFormError(`Failed to ${isEditing ? 'update' : 'create'} employee`);
     } finally {
       setSubmitting(false);
     }
@@ -530,13 +555,10 @@ export function Employees() {
       loadEmployees();
       return;
     }
-
     try {
       setLoading(true);
       setError(null);
-
       const result = await employeeService.searchEmployees(searchTerm);
-
       if (result.success) {
         setEmployees(result.data || []);
       } else {
@@ -553,10 +575,8 @@ export function Employees() {
     if (!window.confirm('Are you sure you want to delete this employee?')) {
       return;
     }
-
     try {
       const result = await employeeService.deleteEmployee(employeeId);
-
       if (result.success) {
         setSuccess('Employee deleted successfully!');
         await loadEmployees();
@@ -569,6 +589,18 @@ export function Employees() {
     }
   };
 
+  // Handle opening add modal
+  const handleAddEmployee = () => {
+    resetForm();
+    setShowModal(true);
+  };
+
+  // Handle closing modal
+  const handleCloseModal = () => {
+    setShowModal(false);
+    resetForm();
+  };
+
   // Clear error after 5 seconds
   useEffect(() => {
     if (error) {
@@ -577,7 +609,7 @@ export function Employees() {
     }
   }, [error]);
 
-  // NEW: Clear form error after 8 seconds
+  // Clear form error after 8 seconds
   useEffect(() => {
     if (formError) {
       const timer = setTimeout(() => setFormError(null), 8000);
@@ -590,9 +622,7 @@ export function Employees() {
       <Card>
         <PageHeader>
           <PageTitle>Employee Management</PageTitle>
-          <Button onClick={() => setShowModal(true)}>
-            Add Employee
-          </Button>
+          <Button onClick={handleAddEmployee}>Add Employee</Button>
         </PageHeader>
 
         {error && <ErrorMessage>{error}</ErrorMessage>}
@@ -608,15 +638,11 @@ export function Employees() {
           />
           <SearchButtonGroup>
             <Button onClick={handleSearch}>Search</Button>
-            <Button variant="secondary" onClick={loadEmployees}>
-              Refresh
-            </Button>
+            <Button variant="secondary" onClick={loadEmployees}>Reset</Button>
           </SearchButtonGroup>
         </SearchContainer>
 
-        <ScrollHint>
-          💡 Scroll horizontally to view all employee details
-        </ScrollHint>
+        <ScrollHint>Scroll horizontally to view all employee details</ScrollHint>
 
         {loading ? (
           <LoadingMessage>Loading employees...</LoadingMessage>
@@ -663,12 +689,16 @@ export function Employees() {
                       </TableCell>
                       <TableCell>
                         <ActionButtons>
-                          <Button size="sm" variant="secondary">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleEditEmployee(employee.id)}
+                          >
                             Edit
                           </Button>
                           <Button 
-                            size="sm" 
                             variant="danger" 
+                            size="sm"
                             onClick={() => handleDeleteEmployee(employee.id)}
                           >
                             Delete
@@ -685,18 +715,14 @@ export function Employees() {
       </Card>
 
       {showModal && (
-        <Modal onClose={() => {
-          setShowModal(false);
-          setFormError(null); // Clear form error when closing modal
-        }}>
+        <Modal onClose={handleCloseModal}>
           <ModalContent>
             <ModalHeader>
-              <CardTitle>Add New Employee</CardTitle>
+              <CardTitle>{isEditing ? 'Edit Employee' : 'Add New Employee'}</CardTitle>
             </ModalHeader>
             <ModalBody>
-              {/* NEW: Show form errors inside modal */}
               {formError && <FormErrorMessage>{formError}</FormErrorMessage>}
-
+              
               <Form onSubmit={handleSubmit}>
                 <FormRow>
                   <FormGroup>
@@ -766,17 +792,16 @@ export function Employees() {
                 </FormRow>
 
                 <FormRow>
-                  {/* UPDATED: Department dropdown with dynamic data */}
                   <FormGroup>
                     <Label>Department *</Label>
                     <Select
-                      name="departmentId"  // CHANGED: from "department" to "departmentId"
+                      name="departmentId"
                       value={formData.departmentId}
                       onChange={handleChange}
                       required
                       disabled={loadingDepartments}
                     >
-                      <option value="" disabled>
+                      <option value="">
                         {loadingDepartments ? 'Loading departments...' : 'Select Department'}
                       </option>
                       {departments.map(dept => (
@@ -811,16 +836,11 @@ export function Employees() {
                 </FormGroup>
 
                 <FormRow>
-                  <Button 
-                    type="button" 
-                    variant="secondary" 
-                    onClick={() => setShowModal(false)}
-                    disabled={submitting}
-                  >
+                  <Button type="button" variant="outline" onClick={handleCloseModal}>
                     Cancel
                   </Button>
                   <Button type="submit" disabled={submitting || loadingDepartments}>
-                    {submitting ? 'Adding Employee...' : 'Add Employee'}
+                    {submitting ? 'Saving...' : (isEditing ? 'Update Employee' : 'Add Employee')}
                   </Button>
                 </FormRow>
               </Form>

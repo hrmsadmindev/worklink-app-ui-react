@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { useAuth } from './AuthContext';
+import { isModuleEnabled } from '../config/clientConfig';
 
 const RolesContext = createContext();
 
@@ -42,7 +43,6 @@ export const RolesProvider = ({ children }) => {
     'payroll.create': ['ADMIN', 'MANAGER'],
     'payroll.edit': ['ADMIN', 'MANAGER'],
     'payroll.delete': ['ADMIN'],
-    'payroll.viewOwn': ['EMPLOYEE'],
 
     // Admin
     'admin.users': ['ADMIN'],
@@ -78,6 +78,20 @@ export const RolesProvider = ({ children }) => {
         roles: ['ADMIN', 'MANAGER']
       },
       {
+        key: 'attendance',
+        label: 'Attendance',
+        icon: 'fas fa-calendar-check',
+        path: '/attendance',
+        roles: ['ADMIN', 'MANAGER', 'EMPLOYEE']
+      },
+      {
+        key: 'leave',
+        label: 'Leave Management',
+        icon: 'fas fa-calendar-times',
+        path: '/leave',
+        roles: ['ADMIN', 'MANAGER', 'EMPLOYEE']
+      },
+      {
         key: 'recruitment',
         label: 'Recruitment',
         icon: 'fas fa-briefcase',
@@ -96,7 +110,7 @@ export const RolesProvider = ({ children }) => {
         label: 'Payroll',
         icon: 'fas fa-money-check-alt',
         path: '/payroll',
-        roles: ['ADMIN', 'MANAGER', 'EMPLOYEE']
+        roles: ['ADMIN', 'MANAGER']
       },
       {
         key: 'admin',
@@ -107,7 +121,15 @@ export const RolesProvider = ({ children }) => {
       }
     ];
 
-    return allItems.filter(item => hasAnyRole(item.roles));
+    // Filter items based on both role permissions AND client configuration
+    return allItems.filter(item => {
+      // Check if user has required roles
+      const hasRequiredRole = hasAnyRole(item.roles);
+      // Check if module is enabled for current client
+      const isEnabledForClient = isModuleEnabled(item.key);
+
+      return hasRequiredRole && isEnabledForClient;
+    });
   };
 
   const canAccessRoute = (route) => {
@@ -122,7 +144,13 @@ export const RolesProvider = ({ children }) => {
 
     const allowedRoles = routePermissions[route];
     if (!allowedRoles) return true; // Allow access to routes not explicitly restricted
-    return hasAnyRole(allowedRoles);
+
+    // Check both role access and client module availability
+    const hasRoleAccess = hasAnyRole(allowedRoles);
+    const moduleName = route.replace('/', ''); // Convert '/employees' to 'employees'
+    const isModuleEnabledForClient = isModuleEnabled(moduleName);
+
+    return hasRoleAccess && isModuleEnabledForClient;
   };
 
   const value = {

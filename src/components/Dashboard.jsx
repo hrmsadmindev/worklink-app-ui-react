@@ -2,6 +2,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import Card, { CardTitle, CardContent } from './Card';
+import { useRoles } from '../context/RolesContext';
+import { useAuth } from '../context/AuthContext';
+import { isModuleEnabled } from '../config/clientConfig';
 
 const DashboardContainer = styled.div`
  max-width: 1200px;
@@ -150,6 +153,9 @@ const ActivityDescription = styled.div`
 `;
 
 export function Dashboard({ employees, jobs, reviews, payrollData, currentUser, onNavigate }) {
+ const { hasAnyRole } = useRoles();
+ const { hasAnyRole: authHasAnyRole } = useAuth();
+
  const totalEmployees = employees.length;
  const openJobs = jobs.filter(job => job.status === 'active').length;
  const pendingReviews = reviews.filter(review => review.status === 'pending').length;
@@ -195,6 +201,52 @@ export function Dashboard({ employees, jobs, reviews, payrollData, currentUser, 
    }
  };
 
+ const dashboardCards = [
+   {
+     key: 'employees',
+     number: totalEmployees,
+     label: 'Total Employees',
+     onClick: handleEmployeesClick,
+     title: 'Click to view all employees',
+     roles: ['ADMIN', 'MANAGER'],
+     module: 'employees'
+   },
+   {
+     key: 'recruitment',
+     number: openJobs,
+     label: 'Open Positions',
+     onClick: handleRecruitmentClick,
+     title: 'Click to view recruitment',
+     roles: ['ADMIN', 'MANAGER'],
+     module: 'recruitment'
+   },
+   {
+     key: 'performance',
+     number: pendingReviews,
+     label: 'Pending Reviews',
+     onClick: handlePerformanceClick,
+     title: 'Click to view performance reviews',
+     roles: ['ADMIN', 'MANAGER', 'EMPLOYEE'],
+     module: 'performance'
+   },
+   {
+     key: 'payroll',
+     number: `₹${processedPayroll.toLocaleString()}`,
+     label: 'Processed Payroll',
+     onClick: handlePayrollClick,
+     title: 'Click to view payroll',
+     roles: ['ADMIN', 'MANAGER'],
+     module: 'payroll'
+   }
+ ];
+
+ // Filter cards based on both role permissions AND client configuration
+ const visibleCards = dashboardCards.filter(card => {
+   const hasRoleAccess = authHasAnyRole(card.roles);
+   const isEnabledForClient = isModuleEnabled(card.module);
+   return hasRoleAccess && isEnabledForClient;
+ });
+
  const recentActivities = [
    {
      icon: '👤',
@@ -226,25 +278,12 @@ export function Dashboard({ employees, jobs, reviews, payrollData, currentUser, 
      </WelcomeCard>
 
      <StatsGrid>
-       <StatCard onClick={handleEmployeesClick} title="Click to view all employees">
-         <StatNumber>{totalEmployees}</StatNumber>
-         <StatLabel>Total Employees</StatLabel>
-       </StatCard>
-
-       <StatCard onClick={handleRecruitmentClick} title="Click to view recruitment">
-         <StatNumber>{openJobs}</StatNumber>
-         <StatLabel>Open Positions</StatLabel>
-       </StatCard>
-
-       <StatCard onClick={handlePerformanceClick} title="Click to view performance reviews">
-         <StatNumber>{pendingReviews}</StatNumber>
-         <StatLabel>Pending Reviews</StatLabel>
-       </StatCard>
-
-       <StatCard onClick={handlePayrollClick} title="Click to view payroll">
-         <StatNumber>₹{processedPayroll.toLocaleString()}</StatNumber>
-         <StatLabel>Processed Payroll</StatLabel>
-       </StatCard>
+       {visibleCards.map(card => (
+         <StatCard key={card.key} onClick={card.onClick} title={card.title}>
+           <StatNumber>{card.number}</StatNumber>
+           <StatLabel>{card.label}</StatLabel>
+         </StatCard>
+       ))}
      </StatsGrid>
 
      {/* <RecentActivities>

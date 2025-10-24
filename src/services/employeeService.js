@@ -101,7 +101,7 @@ export const employeeService = {
   // Update employee
   async updateEmployee(id, employeeData) {
     try {
-      const response = await api.put(`/employees/${id}`, employeeData);
+      const response = await api.patch(`/employees/${id}`, employeeData);
 
       if (response.data && response.data.success) {
         return {
