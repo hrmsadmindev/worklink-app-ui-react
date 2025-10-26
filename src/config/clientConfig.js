@@ -3,12 +3,26 @@
 
 export const CLIENT_CONFIG = {
   // Current client identifier - change this for different deployments
-  clientId: process.env.REACT_APP_CLIENT_ID || 'default',
+  clientId: process.env.REACT_APP_CLIENT_ID || 'defaultNoAccess',
 
   // Module availability per client
   clients: {
-    // Default client - all modules enabled
-    default: {
+    // Default client - no modules enabled, fallback to this if no client info
+    //entered in the .env file
+    defaultNoAccess: {
+      modules: {
+        dashboard: true, //made this true to avoid re-render error on startup
+        employees: false,
+        attendance: false,
+        leave: false,
+        performance: false,
+        payroll: false,
+        admin: false,
+        recruitment: false
+      }
+    },
+    //All modules enabled
+    defaultAllAccess: {
       modules: {
         dashboard: true,
         employees: true,
